@@ -16,10 +16,10 @@ function callGiphyAPI(character) {
 		url: queryURL,
 		method: "GET"
 	}).done(function(response) {
-		//TODO - integrate with our requirements. Display function is not defined.
+		// TODO - integrate with our requirements. Display function is not defined.
 		displayGifs(response);
 	}).fail(function(){
-		//TODO - integrate with our requirements. Display function is not defined.
+		// TODO - integrate with our requirements. Display function is not defined.
 		displayErrors();
 	});
-}  
+}
