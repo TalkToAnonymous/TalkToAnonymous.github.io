@@ -39,10 +39,13 @@
 
 	$('#sign-up-form').on('submit', function(event) {
 		event.preventDefault();
-
+		$('#sign-up-error-message-container').addClass('is-hidden');
+		$('[data-toggle="popover"]').addClass('is-hidden');
+		$('#sign-up-error-message').text('');
 		const email = $('#sign-up-email').val().trim();
 		const password = $('#sign-up-password').val().trim();
 		const confirmPassword = $('#confirm-password').val().trim();
+		let message = '';
 		$(this).find('.form-control').removeClass('form-control--invalid');
 
 		let valid = true;
@@ -50,20 +53,26 @@
 		if(!validate.validateEmail(email)) {
 			valid = false;
 			$('#sign-up-email').addClass('form-control--invalid');
+			message = 'Invalid email format !!';
 		}
 
-		if(!validate.validatePassword(password)) {
+		if(valid && !validate.validatePassword(password)) {
 			valid = false;
 			$('#sign-up-password').addClass('form-control--invalid');
+			message = 'Invalid password format !!';
+			$('[data-toggle="popover"]').removeClass('is-hidden').popover();;
 		}
 
-		if(!validate.validateAreEqual(password, confirmPassword)) {
+		if(valid && !validate.validateAreEqual(password, confirmPassword)) {
 			valid = false;
 			$('#sign-up-password').addClass('form-control--invalid');
 			$('#confirm-password').addClass('form-control--invalid');
+			message = 'Passwords did not match';
 		}
 
 		if(!valid) {
+			$('#sign-up-error-message-container').removeClass('is-hidden');
+			$('#sign-up-error-message').html(message);
 			return false;
 		}
 
