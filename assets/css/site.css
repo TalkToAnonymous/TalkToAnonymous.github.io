@@ -6,6 +6,17 @@
 	margin-bottom: 16px;
 }
 
+.vertical-align {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    display: table;
+    width: 100%;
+}
+
 .input-group {
 	margin-bottom: 16px;
 	width: 100%;
