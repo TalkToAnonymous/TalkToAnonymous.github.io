@@ -33,3 +33,7 @@
 .is-hidden {
 	display: none;
 }
+
+.form-control--invalid {
+	background-color: #ffdddd;
+}
