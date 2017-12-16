@@ -22,11 +22,11 @@
 						<form id="sign-in-form" class="bs-example bs-example-form">
 							<div class="input-group">
 								<label for="email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
-								<input required type="Email" id="email" class="form-control" placeholder="Email">
+								<input oninput="this.className='form-control'" required type="Email" id="email" class="form-control" placeholder="Email">
 							</div>
 							<div class="input-group">
 								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
-								<input required type="password" id="password" class="form-control" placeholder="Password">
+								<input  oninput="this.className='form-control'" required type="password" id="password" class="form-control" placeholder="Password">
 							</div>
 							<button role="submit" id="sign-in" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Sign In</button>
 							<a role="button" class="gutter-left--large" id="go-to-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="sign-up-container" class="row vertical-align">
+		<div id="sign-up-container" class="row is-hidden vertical-align">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -44,16 +44,16 @@
 					<div class="panel-body">
 						<form id="sign-up-form" class="bs-example bs-example-form">
 							<div class="input-group">
-								<label for="email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
-								<input required type="Email" id="email" class="form-control" placeholder="Email">
+								<label for="sign-up-email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
+								<input oninput="this.className='form-control'" required type="email" id="sign-up-email" class="form-control" placeholder="Email">
 							</div>
 							<div class="input-group">
-								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
-								<input required type="password" id="password" class="form-control" placeholder="Password">
+								<label for="sign-up-password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
+								<input oninput="this.className='form-control'" required type="password" id="sign-up-password" class="form-control" placeholder="Password">
 							</div>
 							<div class="input-group">
 								<label for="confirm-password"><span class="glyphicon glyphicon-eye-close"></span> Confirm Password</label>
-								<input required type="password" id="confirm-password" class="form-control" placeholder="Confirm Password">
+								<input oninput="this.className='form-control'" required type="password" id="confirm-password" class="form-control" placeholder="Confirm Password">
 							</div>
 							<button role="submit" id="sign-up" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Start talking to Anonymous</button>
 							<button role="button" id="cancel" class="btn btn-default"><span class="fa fa-times-circle"></span> Cancel</button>
@@ -66,6 +66,7 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="assets/javascript/validator.js"></script>
 	<script src="assets/javascript/app.js"></script>
 </body>
 </html>

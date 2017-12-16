@@ -29,3 +29,11 @@
 .gutter-left--large {
 	margin-left: 50px;
 }
+
+.is-hidden {
+	display: none;
+}
+
+.form-control--invalid {
+	background-color: #ffdddd;
+}
