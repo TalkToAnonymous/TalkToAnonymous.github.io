@@ -23,3 +23,25 @@ function callGiphyAPI(character) {
 		displayErrors();
 	});
 }
+
+$('#go-to-sign-up').on('click', function(event) {
+	event.preventDefault();
+	$('#sign-in-container').addClass('is-hidden');
+	$('#sign-up-container').removeClass('is-hidden');
+});
+
+$('#cancel').on('click', function(event){
+	event.preventDefault();
+	$('#sign-in-container').removeClass('is-hidden');
+	$('#sign-up-container').addClass('is-hidden');
+});
+
+$('#sign-up-form').on('submit', function(event) {
+	const email = $('#sign-up-email').val().trim();
+	const password = $('#sign-up-password').val().trim();
+	firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		// TODO handle erros
+		debugger;
+	});
+	event.preventDefault();
+});

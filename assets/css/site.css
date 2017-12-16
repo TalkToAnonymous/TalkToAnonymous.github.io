@@ -29,3 +29,7 @@
 .gutter-left--large {
 	margin-left: 50px;
 }
+
+.is-hidden {
+	display: none;
+}
