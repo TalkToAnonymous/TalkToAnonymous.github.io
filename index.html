@@ -4,12 +4,65 @@
 	<meta charset="UTF-8">
 	<title>Talk to Anonymous</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="assets/css/site.css">
+	<link rel="stylesheet" href="assets/css/font-awesome/css/font-awesome.min.css">
 	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 
 </head>
 <body>
+	<main role="main" class="container">
+		<div id="sign-in-container" class="row vertical-align">
+			<div class="col-sm-4 col-sm-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><span class="fa fa-comments-o"></span> Talk to anonymous</h3>
+					</div>
+					<div class="panel-body">
+						<form id="sign-in-form" class="bs-example bs-example-form">
+							<div class="input-group">
+								<label for="email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
+								<input required type="Email" id="email" class="form-control" placeholder="Email">
+							</div>
+							<div class="input-group">
+								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
+								<input required type="password" id="password" class="form-control" placeholder="Password">
+							</div>
+							<button role="submit" id="sign-in" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Sign In</button>
+							<a role="button" class="gutter-left--large" id="go-to-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="sign-up-container" class="row vertical-align">
+			<div class="col-sm-4 col-sm-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><span class="fa fa-comments-o"></span> Talk to anonymous</h3>
+					</div>
+					<div class="panel-body">
+						<form id="sign-up-form" class="bs-example bs-example-form">
+							<div class="input-group">
+								<label for="email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
+								<input required type="Email" id="email" class="form-control" placeholder="Email">
+							</div>
+							<div class="input-group">
+								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
+								<input required type="password" id="password" class="form-control" placeholder="Password">
+							</div>
+							<div class="input-group">
+								<label for="confirm-password"><span class="glyphicon glyphicon-eye-close"></span> Confirm Password</label>
+								<input required type="password" id="confirm-password" class="form-control" placeholder="Confirm Password">
+							</div>
+							<button role="submit" id="sign-up" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Start talking to Anonymous</button>
+							<button role="button" id="cancel" class="btn btn-default"><span class="fa fa-times-circle"></span> Cancel</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
