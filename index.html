@@ -19,6 +19,11 @@
 						<h3 class="panel-title"><span class="fa fa-comments-o"></span> Talk to anonymous</h3>
 					</div>
 					<div class="panel-body">
+						<div class="alert alert-danger is-hidden" id="sign-in-error-message-container" role="alert">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							<span class="sr-only">Error: </span>
+							<span id="sign-in-error-message"></span>
+						</div>
 						<form id="sign-in-form" class="bs-example bs-example-form">
 							<div class="input-group">
 								<label for="email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
@@ -43,6 +48,26 @@
 						<h3 class="panel-title"><span class="fa fa-comments-o"></span> Talk to anonymous</h3>
 					</div>
 					<div class="panel-body">
+						<div class="alert alert-danger is-hidden" id="sign-up-error-message-container" role="alert">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							<span class="sr-only">Error: </span>
+							<span id="sign-up-error-message"></span>
+							<span class="glyphicon glyphicon-info-sign"
+								data-toggle="popover"
+								data-placement="right"
+								data-container="body"
+								title="Password must have:"
+								data-content='<ul>
+									<li>At least one small letter.</li>
+									<li>At least one capital letter.</li>
+									<li>At least one number.</li>
+									<li>At least one special character !#$%&*+-/=?^_{|}~</li>
+									<li>At least 8 characters long.</li>
+									</ul>'
+								data-html="true"
+								data-trigger="hover">
+							</span>
+						</div>
 						<form id="sign-up-form" class="bs-example bs-example-form">
 							<div class="input-group">
 								<label for="sign-up-email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
