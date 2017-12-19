@@ -37,3 +37,9 @@
 .form-control--invalid {
 	background-color: #ffdddd;
 }
+
+body {
+	background-image: url(../images/anonymous18.jpg);
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
