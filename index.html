@@ -12,7 +12,7 @@
 </head>
 <body>
 	<main role="main" class="container">
-		<div id="sign-in-container" class="row vertical-align">
+		<div id="sign-in-container" class="row is-hidden vertical-align">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -22,7 +22,7 @@
 						<form id="sign-in-form" class="bs-example bs-example-form">
 							<div class="input-group">
 								<label for="email"><span class="glyphicon glyphicon-envelope"></span> Email</label>
-								<input oninput="this.className='form-control'" required type="Email" id="email" class="form-control" placeholder="Email">
+								<input oninput="this.className='form-control'" required type="email" id="email" class="form-control" placeholder="Email">
 							</div>
 							<div class="input-group">
 								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
@@ -35,6 +35,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div id="sign-up-container" class="row is-hidden vertical-align">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="panel panel-default">
@@ -62,11 +63,23 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="dashboard-container" class="row is-hidden">
+			<div class="col-sm-4 col-sm-offset-4">
+				<h1>Dashboard Under Construction!!</h1>
+			</div>
+		</div>
 	</main>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	<script src="assets/javascript/validator.js"></script>
+	<script src="assets/javascript/utils/validator.js"></script>
+	<script src="assets/javascript/utils/firebaseutil.js"></script>
+	<script src="assets/javascript/utils/giphyutil.js"></script>
+	<script src="assets/javascript/components/signin.js"></script>
+	<script src="assets/javascript/components/signup.js"></script>
+	<script src="assets/javascript/components/dashboard.js"></script>
+	<script src="assets/javascript/landingpage.js"></script>
 	<script src="assets/javascript/app.js"></script>
 </body>
 </html>
