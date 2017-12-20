@@ -12,6 +12,7 @@ $(function () {
 		dashboardObj.prototype.initialize = function (user) {
 			this.show();
 			this.dashboardContainer.text('Welcome ' + user.email + ' This page is under Construction');
+			$('#sign-out').removeClass('is-hidden');
 		};
 
 		dashboardObj.prototype.show = function (course) {
