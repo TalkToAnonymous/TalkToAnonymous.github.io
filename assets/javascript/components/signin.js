@@ -21,6 +21,7 @@ $(function () {
 
 		signInObj.prototype.initialize = function () {
 			this.show();
+			$('#sign-out').addClass('is-hidden');
 			$('#sign-in-form').unbind('submit').on('submit', this.signInUser);
 			$('#go-to-sign-up').on('click', this.showSignUp);
 		};

@@ -15,7 +15,6 @@ $(function () {
 
 		dashboardObj.prototype.initialize = function (user) {
 			this.show();
-			this.dashboardContainer.text('Welcome ' + user.email + ' This page is under Construction');
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd);
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
@@ -55,18 +54,7 @@ $(function () {
 				const topicSnapShotVal = topicSnapShot.val();
 				const topic = $('<li>');
 				topic.attr({ 'data-key': topicSnapShot.key });
-				topic.text(topicSnapShot.title);
-				$('#topics').append(topic);
-				this.firebaseUtil.watchList('topics/' + topicSnapShot.key + '/messages', this.handleMessageAdd);
-			}
-		};
-
-		dashboardObj.prototype.handleTopicAdd = function (topicSnapShot) {
-			if(topicSnapShot) {
-				const topicSnapShotVal = topicSnapShot.val();
-				const topic = $('<li>');
-				topic.attr({ 'data-key': topicSnapShot.key });
-				topic.text(topicSnapShot.title);
+				topic.text(topicSnapShotVal.title);
 				$('#topics').append(topic);
 				this.firebaseUtil.watchList('topics/' + topicSnapShot.key + '/messages', this.handleMessageAdd);
 			}
