@@ -122,12 +122,25 @@
 				</div>
 			</div>
 		</div>
-
-		<div id="dashboard-container" class="row is-hidden">
-			<div class="col-sm-4 col-sm-offset-4">
-				<h1>Dashboard Under Construction!!</h1>
+		
+		<div id="dashboard-container">
+			<div class="row">
+				<div class="col-md-4">
+					<h3>Topic Name</h3>
+					<ul id="topics"></ul>
+					<button id="add-topic" class="btn btn-primary">Add Topic</button>
+				</div>
+				<div class="col-md-8">
+					<ul id="messages"></ul>
+					<div class="form-group" id="message-form">
+						<label for="usermsg">Add a message</label>
+				        <input name="usermsg" class="form-control" type="text" id="usermsg" size="63"/>
+				    </div>
+				    <button class="btn btn-primary" name="submitmsg" type="submit"  id="submitmsg">Submit</button>
+				    <button class="btn btn-primary" name="pick-img" type="?" id="pick-img"></button>
+				</div>
 			</div>
-		</div>
+    	</div>
 	</main>
 
 	<footer class="footer">
