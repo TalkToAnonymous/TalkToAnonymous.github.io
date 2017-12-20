@@ -10,16 +10,18 @@ $(function () {
 		};
 
 		var firebaseUtilObj = function () {
+			this.topicsRef = null;
 		};
 
 		firebaseUtilObj.prototype.initialize = function(showSignIn, showDashboard) {
 			firebase.initializeApp(config);
+			this.database = firebase.database(); 
 			firebase.auth().onAuthStateChanged(function(user) {
-			  if (user) {
-			  	showDashboard(user);
-			  } else {
-			  	showSignIn();
-			  }
+				if (user) {
+					showDashboard(user);
+				} else {
+					showSignIn();
+				}
 			});
 		};
 
@@ -31,11 +33,25 @@ $(function () {
 			firebase.auth().signInWithEmailAndPassword(email, password).catch(erroCallBack);
 		};
 
-		firebaseUtilObj.prototype.signOutUser = function(successCallBack, erroCallBack) {
-			firebase.auth().signOut().then(successCallBack).catch(erroCallBack);
+		firebaseUtilObj.prototype.signOutUser = function() {
+			firebase.auth().signOut();
+		};
+
+		firebaseUtilObj.prototype.watchList = function(reference, handler) {
+			this.database.ref(reference).on('child_added', handler)
+		};
+
+		firebaseUtilObj.prototype.stopWatchingList = function(reference) {
+			this.database.ref(reference).off('child_added')
+		};
+
+
+		firebaseUtilObj.prototype.pushChild = function(reference, child) {
+			this.database.ref(reference).push(child)
 		};
 
 		return firebaseUtilObj;
 	})();
 });
+
 
