@@ -15,6 +15,7 @@ $(function () {
 
 		dashboardObj.prototype.initialize = function (user) {
 			this.show();
+			$('#topics').empty();
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd);
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
@@ -52,7 +53,7 @@ $(function () {
 		dashboardObj.prototype.handleTopicAdd = function (topicSnapShot) {
 			if(topicSnapShot) {
 				const topicSnapShotVal = topicSnapShot.val();
-				const topic = $('<li>');
+				const topic = $('<a href="#" class="list-group-item">');
 				topic.attr({ 'data-key': topicSnapShot.key });
 				topic.text(topicSnapShotVal.title);
 				$('#topics').append(topic);

@@ -17,18 +17,24 @@ $(function () {
 			this.dashboard.initialize(user);
 			this.signIn.hide();
 			this.signUp.hide();
+			$('body').addClass('body--dashboard')
+			.removeClass('body--sign-in');
 		};
 
 		landingPageObj.prototype.goToSignIn = function() {
 			this.dashboard.hide();
 			this.signIn.initialize();
 			this.signUp.hide();
+			$('body').removeClass('body--dashboard')
+			.addClass('body--sign-in');
 		}
 
 		landingPageObj.prototype.goToSignUp = function() {
 			this.dashboard.hide();
 			this.signIn.hide();
 			this.signUp.initialize();
+			$('body').removeClass('body--dashboard')
+			.addClass('body--sign-in');
 		}
 
 		landingPageObj.prototype.initialize = function() {
