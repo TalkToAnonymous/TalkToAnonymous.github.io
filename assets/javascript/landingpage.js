@@ -33,8 +33,6 @@ $(function () {
 
 		landingPageObj.prototype.initialize = function() {
 			this.firebaseUtil.initialize(this.goToSignIn, this.goToDashboard);
-			// TODO remove this after implementing signout
-			this.firebaseUtil.signOutUser();
 		}
 
 		return landingPageObj;

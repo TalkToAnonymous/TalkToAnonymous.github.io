@@ -11,6 +11,17 @@
 
 </head>
 <body>
+	<header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#"><strong>TalktoAnonymous</strong></a>
+		<a href="#" id="sign-out" class="btn btn-info is-hidden btn-sm">
+          <span class="glyphicon glyphicon-log-out"></span> Log out
+        </a>
+          </form>
+      </nav>
+    </header>
+
 	<main role="main" class="container">
 		<div id="sign-in-container" class="row is-hidden vertical-align">
 			<div class="col-sm-4 col-sm-offset-4">
@@ -89,12 +100,54 @@
 			</div>
 		</div>
 
-		<div id="dashboard-container" class="row is-hidden">
-			<div class="col-sm-4 col-sm-offset-4">
-				<h1>Dashboard Under Construction!!</h1>
+		<div class="modal fade" id="add-topic-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Add Topic to start Conversation</h4>
+					</div>
+					<div class="modal-body">
+						<form id="add-topic-form">
+							<div class="input-group">
+								<input  maxlength="50" required type="text" class="form-control" id="topic-title" placeholder="Topic title">
+								<span class="input-group-btn">
+									<button class="btn btn-default" role='submit' type="submit"><span class="glyphicon glyphicon-plus"></span></button>
+								</span>
+								<span class="input-group-btn">
+									<button class="btn btn-default" role='close' data-dismiss="modal" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+								</span>
+						    </div>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
+		
+		<div id="dashboard-container">
+			<div class="row">
+				<div class="col-md-4">
+					<h3>Topic Name</h3>
+					<ul id="topics"></ul>
+					<button id="add-topic" class="btn btn-primary">Add Topic</button>
+				</div>
+				<div class="col-md-8">
+					<ul id="messages"></ul>
+					<div class="form-group" id="message-form">
+						<label for="usermsg">Add a message</label>
+				        <input name="usermsg" class="form-control" type="text" id="usermsg" size="63"/>
+				    </div>
+				    <button class="btn btn-primary" name="submitmsg" type="submit"  id="submitmsg">Submit</button>
+				    <button class="btn btn-primary" name="pick-img" type="?" id="pick-img"></button>
+				</div>
+			</div>
+    	</div>
 	</main>
+
+	<footer class="footer">
+      <div class="container">
+        <span class="text-muted">&copy; 2017 TalktoAnonymous</span>
+      </div>
+    </footer>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
