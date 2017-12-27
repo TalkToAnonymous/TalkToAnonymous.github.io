@@ -15,14 +15,13 @@
       <!-- Fixed navbar -->
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#"><strong>TalktoAnonymous</strong></a>
-		<a href="#" id="sign-out" class="btn btn-info is-hidden btn-sm">
+		<button title="Log out of the application" id="sign-out" class="btn btn-default is-hidden btn-sm">
           <span class="glyphicon glyphicon-log-out"></span> Log out
-        </a>
-          </form>
+        </button>
       </nav>
     </header>
 
-	<main role="main" class="container">
+	<main class="container">
 		<div id="sign-in-container" class="row is-hidden vertical-align">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="panel panel-default">
@@ -44,8 +43,8 @@
 								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
 								<input  oninput="this.className='form-control'" required type="password" id="password" class="form-control" placeholder="Password">
 							</div>
-							<button role="submit" id="sign-in" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Sign In</button>
-							<a role="button" class="gutter-left--large" id="go-to-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+							<button title="Sign In" id="sign-in" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Sign In</button>
+							<a role="button" title="Go to sign up page" class="gutter-left--large" id="go-to-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
 						</form>
 					</div>
 				</div>
@@ -92,8 +91,8 @@
 								<label for="confirm-password"><span class="glyphicon glyphicon-eye-close"></span> Confirm Password</label>
 								<input oninput="this.className='form-control'" required type="password" id="confirm-password" class="form-control" placeholder="Confirm Password">
 							</div>
-							<button role="submit" id="sign-up" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Start talking to Anonymous</button>
-							<button role="button" id="cancel" class="btn btn-default"><span class="fa fa-times-circle"></span> Cancel</button>
+							<button title="Sign Up" id="sign-up" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Start talking to Anonymous</button>
+							<button title="Cancel" id="cancel" class="btn btn-default"><span class="fa fa-times-circle"></span> Cancel</button>
 						</form>
 					</div>
 				</div>
@@ -111,10 +110,10 @@
 							<div class="input-group">
 								<input  maxlength="50" required type="text" class="form-control" id="topic-title" placeholder="Topic title">
 								<span class="input-group-btn">
-									<button class="btn btn-default" role='submit' type="submit"><span class="glyphicon glyphicon-plus"></span></button>
+									<button class="btn btn-default" title="Save Topic" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
 								</span>
 								<span class="input-group-btn">
-									<button class="btn btn-default" role='close' data-dismiss="modal" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+									<button class="btn btn-default" title="Close" data-dismiss="modal" type="button"><span class="glyphicon glyphicon-remove"></span></button>
 								</span>
 						    </div>
 						</form>
@@ -123,21 +122,52 @@
 			</div>
 		</div>
 		
-		<div id="dashboard-container">
-			<div class="row">
-				<div class="col-md-4">
-					<h3>Topic Name</h3>
-					<ul id="topics"></ul>
-					<button id="add-topic" class="btn btn-primary">Add Topic</button>
+		<div id="dashboard-container" class="row is-hidden height-full">
+			<div class="col-md-4 height-full">
+				<div class="panel panel-default height-full">
+					<div class="panel-heading">
+						<h2 class="panel-title"><span class="glyphicon glyphicon glyphicon-list-alt"></span> Topics</h2>
+					</div>
+					<div class="panel-body">
+						<div id="topics" class="list-group">
+						</div>
+					</div>
+					<div class="clearfix">
+						<div class="input-group">
+							<button id="add-topic" title="Add Topic" class="btn btn-primary circle btn--custom-large">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button id="start-private" title="Start a Private Anonymous Conversation" class="btn btn-danger circle btn--custom-large">
+								<i class="fa fa-user-secret" aria-hidden="true"></i>
+							</button>
+						</div>
+					</div>
 				</div>
-				<div class="col-md-8">
-					<ul id="messages"></ul>
-					<div class="form-group" id="message-form">
-						<label for="usermsg">Add a message</label>
-				        <input name="usermsg" class="form-control" type="text" id="usermsg" size="63"/>
-				    </div>
-				    <button class="btn btn-primary" name="submitmsg" type="submit"  id="submitmsg">Submit</button>
-				    <button class="btn btn-primary" name="pick-img" type="?" id="pick-img"></button>
+			</div>
+			<div id="message-container" class="col-md-8 height-full">
+				<div class="panel panel-default height-full">
+					<div class="panel-heading">
+						<h2 class="panel-title"><span class="fa fa-comments-o"></span> <span id="conversation-name">Talk to Anonymous</span></h2>
+					</div>
+					<div class="panel-body">
+						<ul id="messages-list"></ul>
+					</div>
+					<div class="panel-footer">
+						<form class="form-group" id="message-form">
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-default" id="add-giphy" title="Add GIF" type="button"><span class="glyphicon glyphicon-picture"></span></button>
+								</span>
+								<input required type="text" class="form-control" autocomplete="off" id="usermsg" name="usermsg" placeholder="/giphy /smile Your message">
+								<span class="input-group-btn">
+									<button class="btn btn-default" title="Send Message"  type="submit"><span class="glyphicon glyphicon-send"></span></button>
+								</span>
+								<span class="input-group-btn">
+									<button class="btn btn-default" id="add-smiley" title="Add Smiley" type="button"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
+								</span>
+						    </div>
+						</form>
+					</div>
 				</div>
 			</div>
     	</div>
@@ -154,6 +184,7 @@
 	<script src="assets/javascript/utils/validator.js"></script>
 	<script src="assets/javascript/utils/firebaseutil.js"></script>
 	<script src="assets/javascript/utils/giphyutil.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 	<script src="assets/javascript/components/signin.js"></script>
 	<script src="assets/javascript/components/signup.js"></script>
 	<script src="assets/javascript/components/dashboard.js"></script>

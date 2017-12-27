@@ -2,19 +2,67 @@
 	box-sizing: border-box;
 }
 
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+
+
+
+body > .container {
+  padding: 60px 15px 0;
+}
+
+.navbar {
+  background-color: rgba(54, 82, 148, 0.8);
+  border-radius: 0;
+  padding: 20px;
+}
+
+.navbar-brand {
+  font-size: 25px;
+  color: #FFF;
+}
+
+#sign-out {
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
 .row {
 	margin-bottom: 16px;
 }
 
 .vertical-align {
-    position: absolute;
-    margin: auto;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    display: table;
-    width: 100%;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: table;
+  width: 100%;
 }
 
 .input-group {
@@ -39,56 +87,68 @@
 }
 
 body {
-	background-image: url(../images/anonymous16.jpg);
-	background-repeat: no-repeat;
-	background-size: 100%;
-	/* Margin bottom by footer height */
-  	margin-bottom: 60px;
+  margin-bottom: 30px;
+  height: calc(100vh - 30px);
+  background-color: #dfdfdf;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+.body--sign-in {
+  background-image: url(../images/anonymity_2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  line-height: 60px; /* Vertically center the text there */
-  background-color: #f5f5f5;
+.body--dashboard {
+    background-image: none;
 }
 
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
-
-body > .container {
-  padding: 60px 15px 0;
+.body--dashboard > .container {
+  height: calc(100% - 182px);
 }
 
-.navbar {
-	background-color: grey;
+.height-full {
+  height: 100%;
 }
 
-.navbar-brand {
-	font-size: 25px;
+#dashboard-container .panel-body {
+  height: calc(100% - 94px);
+  overflow-y: auto;
 }
 
-#sign-out {
-	float: right;
+.circle {
+  border-radius: 100%;
 }
 
-.footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
+.btn--custom-large {
+    padding: 10px;
+    width: 55px;
+    height: 55px;
+    float: right;
+    margin-right: 10px;
+    margin-top: -10px;
+    font-size: 30px;
+    line-height: 30px;
 }
 
-code {
-  font-size: 80%;
+#message-container .input-group,
+.form-group {
+  margin-bottom: 0px;
 }
+
+.panel-default>.panel-heading {
+  background-color:  rgb(54, 82, 148);
+  color: #FFF;
+}
+
+.btn-primary {
+  background-color:  rgb(54, 82, 148);
+}
+
+.left-message {
+  float: left;
+}
+
+.right-message {
+  float: right;
+}
+
