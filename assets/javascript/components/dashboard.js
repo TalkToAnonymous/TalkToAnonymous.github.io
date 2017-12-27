@@ -45,7 +45,8 @@ $(function () {
 
 		dashboardObj.prototype.handleTopicClick = function(event) {
 			const target = $(event.currentTarget);
-			this.showMessages();
+			$('.list-group-item').removeClass('active');
+			target.addClass('active');
 			const key = target.attr('data-key');
 			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
 		};
@@ -66,6 +67,16 @@ $(function () {
 		}
 
 		dashboardObj.prototype.initializeTopic = function(topicSnap) {
+			this.showMessages();
+			if(this.currentTopic) {
+				if(this.currentTopic.key === topicSnap.key) {
+					return false;
+				}
+
+				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+			}
+
 			if(topicSnap) {
 				$('#messages-list').empty();
 				this.currentTopic = {
@@ -99,7 +110,8 @@ $(function () {
 				title: title
 			};
 
-			this.firebaseUtil.pushChild('topics', topic);
+			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
+			this.firebaseUtil.getFirebaseObject('topics/' + topicSnapShot.key, this.initializeTopic);
 			$('#add-topic-modal').modal('hide');
 		};
 
@@ -114,9 +126,6 @@ $(function () {
 				topic.attr({ 'data-key': topicSnapShot.key });
 				topic.text(topicSnapShotVal.title);
 				$('#topics').append(topic);
-				const messagesRef = 'topics/' + topicSnapShot.key + '/messages';
-				this.firebaseUtil.stopWatchingList(messagesRef);
-				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd)
 			}
 		};
 
