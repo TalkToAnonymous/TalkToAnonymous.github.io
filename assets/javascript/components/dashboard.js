@@ -72,14 +72,11 @@ $(function () {
 		};
 
 		dashboardObj.prototype.handleTopicClick = function(event) {
-				var target = $(event.currentTarget);
-				//take this out
-				alert(target.attr('data-key'));
-				console.log(this);
-				//$('#meesage-topic-name').
-				var key = target.attr('data-key');
-				var topicTitle = target.title;
-				console.log(topicTitle);
+			const target = $(event.currentTarget);
+			$('.list-group-item').removeClass('active');
+			target.addClass('active');
+			const key = target.attr('data-key');
+			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
 		};
 		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
