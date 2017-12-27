@@ -76,7 +76,7 @@ $(function () {
 		};
 
 		firebaseUtilObj.prototype.getFirebaseObject = function(reference, callback) {
-			this.database.ref(reference).once(callback);
+			this.database.ref(reference).once('value', callback);
 		};
 
 		return firebaseUtilObj;
