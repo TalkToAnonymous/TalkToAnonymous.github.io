@@ -7,10 +7,21 @@ $(function () {
 			this.handleTopicAdd = this.handleTopicAdd.bind(this);
 			this.showSaveTopic = this.showSaveTopic.bind(this);
 			this.saveTopic = this.saveTopic.bind(this);
+			this.showMessages = this.showMessages.bind(this);
+			this.hideMessages = this.hideMessages.bind(this);
+			this.handleTopicClick = this.handleTopicClick.bind(this);
 
 
 			this.dashboardContainer = $('#dashboard-container');
 			this.firebaseUtil = firebaseUtil;
+		};
+
+		dashboardObj.prototype.showMessages = function () {
+			$('#message-container').removeClass('is-hidden');
+		};
+
+		dashboardObj.prototype.hideMessages = function() {
+			$('#message-container').addClass('is-hidden');
 		};
 
 		dashboardObj.prototype.initialize = function (user) {
@@ -19,14 +30,26 @@ $(function () {
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd);
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
+			this.hideMessages();
+			$(document).on('click', '.topic-list-item', this.handleTopicClick);
 		};
 
+		dashboardObj.prototype.handleTopicClick = function(event) {
+				var target = $(event.currentTarget);
+				//take this out
+				alert(target.attr('data-key'));
+				console.log(this);
+				//$('#meesage-topic-name').
+				var key = target.attr('data-key');
+				var topicTitle = target.title;
+				console.log(topicTitle);
+		};
 
-		dashboardObj.prototype.show = function (course) {
+		dashboardObj.prototype.show = function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
 
-		dashboardObj.prototype.showSaveTopic = function (course) {
+		dashboardObj.prototype.showSaveTopic = function () {
 			$('#add-topic-modal').modal('show');
 			$('#add-topic-form').unbind('submit').on('submit', this.saveTopic);
 		};
@@ -53,7 +76,7 @@ $(function () {
 		dashboardObj.prototype.handleTopicAdd = function (topicSnapShot) {
 			if(topicSnapShot) {
 				const topicSnapShotVal = topicSnapShot.val();
-				const topic = $('<a href="#" class="list-group-item">');
+				const topic = $('<a href="#" class="list-group-item topic-list-item">');
 				topic.attr({ 'data-key': topicSnapShot.key });
 				topic.text(topicSnapShotVal.title);
 				$('#topics').append(topic);
@@ -67,7 +90,7 @@ $(function () {
 				const message = $('<li>');
 				message.attr({ 'data-key': messageSnapShot.key });
 				message.text(messageSnapShot.value);
-				$('#messagaes').append(message);
+				$('#messages').append(message);
 			}
 		};
 
