@@ -10,12 +10,6 @@ $(function () {
 			this.showMessages = this.showMessages.bind(this);
 			this.hideMessages = this.hideMessages.bind(this);
 			this.handleTopicClick = this.handleTopicClick.bind(this);
-<<<<<<< Updated upstream
-
-
-			this.dashboardContainer = $('#dashboard-container');
-			this.firebaseUtil = firebaseUtil;
-=======
 			this.initializeTopic = this.initializeTopic.bind(this);
 			this.addMessageToTheConversation = this.addMessageToTheConversation.bind(this);
 			this.handleMessageAdd = this.handleMessageAdd.bind(this);
@@ -29,7 +23,6 @@ $(function () {
 			this.currentUser = null;
 			this.giphyModal = new app.giphyModal();
 			this.smileyModal = new app.smileyModal();
->>>>>>> Stashed changes
 		};
 
 		dashboardObj.prototype.showMessages = function () {
@@ -88,9 +81,7 @@ $(function () {
 				var topicTitle = target.title;
 				console.log(topicTitle);
 		};
-
-<<<<<<< Updated upstream
-=======
+		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
 			event.preventDefault();
 			const message = $('#usermsg').val().trim();
@@ -133,7 +124,6 @@ $(function () {
 			}
 		}
 
->>>>>>> Stashed changes
 		dashboardObj.prototype.show = function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
@@ -154,13 +144,9 @@ $(function () {
 				title: title
 			};
 
-<<<<<<< Updated upstream
-			this.firebaseUtil.pushChild('topics', topic);
-=======
 			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
 			this.firebaseUtil.getFirebaseObject('topics/' + topicSnapShot.key, this.initializeTopic);
 			$('#topic-title').val('');
->>>>>>> Stashed changes
 			$('#add-topic-modal').modal('hide');
 		};
 
@@ -182,12 +168,6 @@ $(function () {
 		dashboardObj.prototype.handleMessageAdd = function (topicSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
-<<<<<<< Updated upstream
-				const message = $('<li>');
-				message.attr({ 'data-key': messageSnapShot.key });
-				message.text(messageSnapShot.value);
-				$('#messages').append(message);
-=======
 				const messageContainer = $('<li class="clearfix">');
 				const message = $('<div>');
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
@@ -207,7 +187,6 @@ $(function () {
 				messageContainer.append(message);
 
 				$('#messages-list').append(messageContainer);
->>>>>>> Stashed changes
 			}
 		};
 
