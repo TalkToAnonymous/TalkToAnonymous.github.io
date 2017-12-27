@@ -10,10 +10,15 @@ $(function () {
 			this.showMessages = this.showMessages.bind(this);
 			this.hideMessages = this.hideMessages.bind(this);
 			this.handleTopicClick = this.handleTopicClick.bind(this);
+			this.initializeTopic = this.initializeTopic.bind(this);
+			this.addMessageToTheConversation = this.addMessageToTheConversation.bind(this);
+			this.handleMessageAdd = this.handleMessageAdd.bind(this);
 
 
 			this.dashboardContainer = $('#dashboard-container');
 			this.firebaseUtil = firebaseUtil;
+			this.currentTopic = null;
+			this.currentUser = null;
 		};
 
 		dashboardObj.prototype.showMessages = function () {
@@ -27,23 +32,52 @@ $(function () {
 		dashboardObj.prototype.initialize = function (user) {
 			this.show();
 			$('#topics').empty();
+			$('#messages-list').empty();
+			this.currentUser = user;
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
-			this.firebaseUtil.watchList('topics', this.handleTopicAdd);
+			this.firebaseUtil.stopWatchingList('topics');
+			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
-			$(document).on('click', '.topic-list-item', this.handleTopicClick);
+			$(document).unbind('click').on('click', '.topic-list-item', this.handleTopicClick);
+			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
 		dashboardObj.prototype.handleTopicClick = function(event) {
-				var target = $(event.currentTarget);
-				//take this out
-				alert(target.attr('data-key'));
-				console.log(this);
-				//$('#meesage-topic-name').
-				var key = target.attr('data-key');
-				var topicTitle = target.title;
-				console.log(topicTitle);
+			const target = $(event.currentTarget);
+			this.showMessages();
+			const key = target.attr('data-key');
+			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
 		};
+
+		dashboardObj.prototype.addMessageToTheConversation = function(event){
+			event.preventDefault();
+			const message = $('#usermsg').val();
+			if(!message) {
+				return false;
+			}
+			const messageObj = {
+				value: message,
+				sender:  this.currentUser.uid,
+				moment: moment.now()
+			};
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+			$('#usermsg').val('');
+		}
+
+		dashboardObj.prototype.initializeTopic = function(topicSnap) {
+			if(topicSnap) {
+				$('#messages-list').empty();
+				this.currentTopic = {
+					key: topicSnap.key,
+					value: topicSnap.val()
+				};
+				$("#conversation-name").text(this.currentTopic.value.title);
+				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+			}
+		}
 
 		dashboardObj.prototype.show = function () {
 			this.dashboardContainer.removeClass('is-hidden');
@@ -80,17 +114,27 @@ $(function () {
 				topic.attr({ 'data-key': topicSnapShot.key });
 				topic.text(topicSnapShotVal.title);
 				$('#topics').append(topic);
-				this.firebaseUtil.watchList('topics/' + topicSnapShot.key + '/messages', this.handleMessageAdd);
+				const messagesRef = 'topics/' + topicSnapShot.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd)
 			}
 		};
 
-		dashboardObj.prototype.handleMessageAdd = function (topicSnapShot) {
+		dashboardObj.prototype.handleMessageAdd = function (messageSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
-				const message = $('<li>');
-				message.attr({ 'data-key': messageSnapShot.key });
-				message.text(messageSnapShot.value);
-				$('#messages').append(message);
+				const messageContainer = $('<li class="clearfix">');
+				const message = $('<div>');
+				if(messageSnapShotVal.sender === this.currentUser.uid) {
+					message.addClass('right-message');
+				} else {
+					message.addClass('left-message');
+				}
+				messageContainer.attr({ 'data-key': messageSnapShot.key });
+				message.text(messageSnapShotVal.value);
+				messageContainer.append(message);
+
+				$('#messages-list').append(messageContainer);
 			}
 		};
 
