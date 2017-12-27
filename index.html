@@ -108,7 +108,7 @@
 					<div class="modal-body">
 						<form id="add-topic-form">
 							<div class="input-group">
-								<input  maxlength="50" required type="text" class="form-control" id="topic-title" placeholder="Topic title">
+								<input autocomplete="off"  maxlength="50" required type="text" class="form-control" id="topic-title" placeholder="Topic title">
 								<span class="input-group-btn">
 									<button class="btn btn-default" title="Save Topic" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
 								</span>
@@ -134,17 +134,20 @@
 					</div>
 					<div class="clearfix">
 						<div class="input-group">
-							<button id="add-topic" title="Add Topic" class="btn btn-primary circle add-topic">
+							<button id="add-topic" title="Add Topic" class="btn btn-primary circle btn--custom-large">
 								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button id="start-private" title="Start a Private Anonymous Conversation" class="btn btn-danger circle btn--custom-large">
+								<i class="fa fa-user-secret" aria-hidden="true"></i>
 							</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div id="messages" class="col-md-8 height-full">
+			<div id="message-container" class="col-md-8 height-full">
 				<div class="panel panel-default height-full">
 					<div class="panel-heading">
-						<h2 class="panel-title"><span class="fa fa-comments-o"></span> Topic</h2>
+						<h2 class="panel-title"><span class="fa fa-comments-o"></span> <span id="conversation-name">Talk to Anonymous</span></h2>
 					</div>
 					<div class="panel-body">
 						<ul id="messages-list"></ul>
@@ -187,7 +190,7 @@
 										data-html="true"
 										data-trigger="click"><span class="glyphicon glyphicon-picture"></span></button>
 								</span>
-								<input required type="text" class="form-control" autocomplete="off" id="usermsg" name="usermsg" placeholder="giphy/ or smile/ or Your message">
+								<input required type="text" class="form-control" autocomplete="off" id="usermsg" name="usermsg" placeholder="/giphy /smile Your message">
 								<span class="input-group-btn">
 									<button class="btn btn-default" title="Send Message"  type="submit"><span class="glyphicon glyphicon-send"></span></button>
 								</span>

@@ -119,16 +119,18 @@ body {
   border-radius: 100%;
 }
 
-.add-topic {
+.btn--custom-large {
     padding: 10px;
     width: 55px;
     height: 55px;
     float: right;
-    margin-right: 30px;
-    margin-top: -30px;
+    margin-right: 10px;
+    margin-top: -10px;
+    font-size: 30px;
+    line-height: 30px;
 }
 
-.input-group,
+#message-container .input-group,
 .form-group {
   margin-bottom: 0px;
 }
@@ -142,6 +144,13 @@ body {
   background-color:  rgb(54, 82, 148);
 }
 
+.left-message {
+  float: left;
+}
+
+.right-message {
+  float: right;
+}
 
 .giphy-container {
   height: 300px;

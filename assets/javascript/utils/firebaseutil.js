@@ -72,11 +72,11 @@ $(function () {
 		// @param {string} reference to the list in firebase database to which child has to be added
 		// @param {object} child child object that needs to be added
 		firebaseUtilObj.prototype.pushChild = function(reference, child) {
-			this.database.ref(reference).push(child);
+			return this.database.ref(reference).push(child);
 		};
 
 		firebaseUtilObj.prototype.getFirebaseObject = function(reference, callback) {
-			this.database.ref(reference).once(callback);
+			this.database.ref(reference).once('value', callback);
 		};
 
 		return firebaseUtilObj;

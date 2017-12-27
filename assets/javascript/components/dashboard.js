@@ -16,7 +16,6 @@ $(function () {
 			this.initializeMessageControls = this.initializeMessageControls.bind(this);
 			this.addGiphyAsMessage = this.addGiphyAsMessage.bind(this);
 			this.addSmileyToMessage = this.addSmileyToMessage.bind(this);
-
 			this.dashboardContainer = $('#dashboard-container');
 			this.firebaseUtil = firebaseUtil;
 			this.currentTopic = null;
@@ -36,11 +35,15 @@ $(function () {
 		dashboardObj.prototype.initialize = function (user) {
 			this.show();
 			$('#topics').empty();
+			$('#messages-list').empty();
+			this.currentUser = user;
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
-			this.firebaseUtil.watchList('topics', this.handleTopicAdd);
+			this.firebaseUtil.stopWatchingList('topics');
+			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
-			$(document).on('click', '.topic-list-item', this.handleTopicClick);
+			$(document).unbind('click').on('click', '.topic-list-item', this.handleTopicClick);
+			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
 		dashboardObj.prototype.initializeMessageControls = function() {
@@ -121,6 +124,45 @@ $(function () {
 			}
 		}
 
+		dashboardObj.prototype.addMessageToTheConversation = function(event){
+			event.preventDefault();
+			const message = $('#usermsg').val();
+			if(!message) {
+				return false;
+			}
+			const messageObj = {
+				value: message,
+				sender:  this.currentUser.uid,
+				moment: moment.now()
+			};
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+			$('#usermsg').val('');
+		}
+
+		dashboardObj.prototype.initializeTopic = function(topicSnap) {
+			this.showMessages();
+			if(this.currentTopic) {
+				if(this.currentTopic.key === topicSnap.key) {
+					return false;
+				}
+
+				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+			}
+
+			if(topicSnap) {
+				$('#messages-list').empty();
+				this.currentTopic = {
+					key: topicSnap.key,
+					value: topicSnap.val()
+				};
+				$("#conversation-name").text(this.currentTopic.value.title);
+				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+			}
+		}
+
 		dashboardObj.prototype.show = function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
@@ -158,11 +200,10 @@ $(function () {
 				topic.attr({ 'data-key': topicSnapShot.key });
 				topic.text(topicSnapShotVal.title);
 				$('#topics').append(topic);
-				this.firebaseUtil.watchList('topics/' + topicSnapShot.key + '/messages', this.handleMessageAdd);
 			}
 		};
 
-		dashboardObj.prototype.handleMessageAdd = function (topicSnapShot) {
+		dashboardObj.prototype.handleMessageAdd = function (messageSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
 				const messageContainer = $('<li class="clearfix">');
