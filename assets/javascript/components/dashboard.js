@@ -10,10 +10,26 @@ $(function () {
 			this.showMessages = this.showMessages.bind(this);
 			this.hideMessages = this.hideMessages.bind(this);
 			this.handleTopicClick = this.handleTopicClick.bind(this);
+<<<<<<< Updated upstream
 
 
 			this.dashboardContainer = $('#dashboard-container');
 			this.firebaseUtil = firebaseUtil;
+=======
+			this.initializeTopic = this.initializeTopic.bind(this);
+			this.addMessageToTheConversation = this.addMessageToTheConversation.bind(this);
+			this.handleMessageAdd = this.handleMessageAdd.bind(this);
+			this.initializeMessageControls = this.initializeMessageControls.bind(this);
+			this.addGiphyAsMessage = this.addGiphyAsMessage.bind(this);
+			this.addSmileyToMessage = this.addSmileyToMessage.bind(this);
+
+			this.dashboardContainer = $('#dashboard-container');
+			this.firebaseUtil = firebaseUtil;
+			this.currentTopic = null;
+			this.currentUser = null;
+			this.giphyModal = new app.giphyModal();
+			this.smileyModal = new app.smileyModal();
+>>>>>>> Stashed changes
 		};
 
 		dashboardObj.prototype.showMessages = function () {
@@ -34,6 +50,34 @@ $(function () {
 			$(document).on('click', '.topic-list-item', this.handleTopicClick);
 		};
 
+		dashboardObj.prototype.initializeMessageControls = function() {
+			this.showMessages();
+			this.giphyModal.initialize(this.addGiphyAsMessage);
+			this.smileyModal.initialize(this.addSmileyToMessage);
+		};
+
+		dashboardObj.prototype.addGiphyAsMessage = function(imageUrl) {
+			if(!imageUrl) {
+				return false;
+			}
+
+			const messageObj = {
+				value: imageUrl,
+				sender:  this.currentUser.uid,
+				moment: moment.now(),
+				isImage: true
+			};
+
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+		};
+
+		dashboardObj.prototype.addSmileyToMessage = function(smiley) {
+			const message = $('#usermsg'),
+			messageVal = $('#usermsg').val(),
+			caretPos = message[0].selectionStart;
+			message.val(messageVal.substring(0, caretPos) + smiley + messageVal.substring(caretPos));
+		};
+
 		dashboardObj.prototype.handleTopicClick = function(event) {
 				var target = $(event.currentTarget);
 				//take this out
@@ -45,6 +89,51 @@ $(function () {
 				console.log(topicTitle);
 		};
 
+<<<<<<< Updated upstream
+=======
+		dashboardObj.prototype.addMessageToTheConversation = function(event){
+			event.preventDefault();
+			const message = $('#usermsg').val().trim();
+			if(!message) {
+				return false;
+			}
+
+			const messageObj = {
+				value: message,
+				sender:  this.currentUser.uid,
+				moment: moment.now(),
+				isImage: false
+			};
+
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+			$('#usermsg').val('');
+		}
+
+		dashboardObj.prototype.initializeTopic = function(topicSnap) {
+			if(this.currentTopic) {
+				if(this.currentTopic.key === topicSnap.key) {
+					return false;
+				}
+
+				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+			}
+
+			if(topicSnap) {
+				this.initializeMessageControls();
+				$('#messages-list').empty();
+				this.currentTopic = {
+					key: topicSnap.key,
+					value: topicSnap.val()
+				};
+				$("#conversation-name").text(this.currentTopic.value.title);
+				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
+				this.firebaseUtil.stopWatchingList(messagesRef);
+				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+			}
+		}
+
+>>>>>>> Stashed changes
 		dashboardObj.prototype.show = function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
@@ -65,7 +154,13 @@ $(function () {
 				title: title
 			};
 
+<<<<<<< Updated upstream
 			this.firebaseUtil.pushChild('topics', topic);
+=======
+			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
+			this.firebaseUtil.getFirebaseObject('topics/' + topicSnapShot.key, this.initializeTopic);
+			$('#topic-title').val('');
+>>>>>>> Stashed changes
 			$('#add-topic-modal').modal('hide');
 		};
 
@@ -87,10 +182,32 @@ $(function () {
 		dashboardObj.prototype.handleMessageAdd = function (topicSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
+<<<<<<< Updated upstream
 				const message = $('<li>');
 				message.attr({ 'data-key': messageSnapShot.key });
 				message.text(messageSnapShot.value);
 				$('#messages').append(message);
+=======
+				const messageContainer = $('<li class="clearfix">');
+				const message = $('<div>');
+				if(messageSnapShotVal.sender === this.currentUser.uid) {
+					message.addClass('right-message');
+				} else {
+					message.addClass('left-message');
+				}
+				messageContainer.attr({ 'data-key': messageSnapShot.key });
+
+				if(messageSnapShotVal.isImage) {
+					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
+					message.append(imgElement);
+				} else {
+					message.text(messageSnapShotVal.value);
+				}
+
+				messageContainer.append(message);
+
+				$('#messages-list').append(messageContainer);
+>>>>>>> Stashed changes
 			}
 		};
 

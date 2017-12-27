@@ -71,7 +71,7 @@ $(function () {
 				valid = false;
 				this.password.addClass('form-control--invalid');
 				message = 'Invalid password format !!';
-				$('[data-toggle="popover"]').removeClass('is-hidden').popover();;
+				$('[data-toggle="popover"]').removeClass('is-hidden').popover();
 			}
 
 			if(valid && !this.validatorUtil.validateAreEqual(password, confirmPassword)) {

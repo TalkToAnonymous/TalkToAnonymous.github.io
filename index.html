@@ -153,9 +153,41 @@
 						<form class="form-group" id="message-form">
 							<div class="input-group">
 								<span class="input-group-btn">
-									<button class="btn btn-default" id="add-giphy" title="Add GIF" type="button"><span class="glyphicon glyphicon-picture"></span></button>
+									<button class="btn btn-default" id="add-giphy" title="Add Giphy to your Conversation" type="button"
+										data-toggle="popover"
+										data-placement="top"
+										data-container="body"
+										data-content='<div class="giphy-container">
+														<form id="search-giphy-form">
+															<div class="input-group">
+																<input autocomplete="off" maxlength="50" required type="text" class="form-control" id="giphy-key" placeholder="Type something interesting!!">
+																<span class="input-group-addon">
+																	<span class="glyphicon glyphicon-search"></span>
+																</span>
+														    </div>
+														</form>
+									    				<ul id="giphy-list" class="list-group">
+									    				</ul>
+							    				    	<div id="giphy-carousel" class="carousel slide is-hidden" data-ride="carousel">
+														  <ol class="carousel-indicators">
+														  </ol>
+														  <div class="carousel-inner" role="listbox">
+														  </div>
+
+														  <a class="left carousel-control" href="#giphy-carousel" role="button" data-slide="prev">
+														    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+														    <span class="sr-only">Previous</span>
+														  </a>
+														  <a class="right carousel-control" href="#giphy-carousel" role="button" data-slide="next">
+														    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+														    <span class="sr-only">Next</span>
+														  </a>
+														</div>
+											    	</div>'
+										data-html="true"
+										data-trigger="click"><span class="glyphicon glyphicon-picture"></span></button>
 								</span>
-								<input required type="text" class="form-control" id="usermsg" name="usermsg" placeholder="/giphy /smile Your message">
+								<input required type="text" class="form-control" autocomplete="off" id="usermsg" name="usermsg" placeholder="giphy/ or smile/ or Your message">
 								<span class="input-group-btn">
 									<button class="btn btn-default" title="Send Message"  type="submit"><span class="glyphicon glyphicon-send"></span></button>
 								</span>
@@ -184,6 +216,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 	<script src="assets/javascript/components/signin.js"></script>
 	<script src="assets/javascript/components/signup.js"></script>
+	<script src="assets/javascript/components/giphymodal.js"></script>
+	<script src="assets/javascript/components/smileymodal.js"></script>
 	<script src="assets/javascript/components/dashboard.js"></script>
 	<script src="assets/javascript/landingpage.js"></script>
 	<script src="assets/javascript/app.js"></script>
