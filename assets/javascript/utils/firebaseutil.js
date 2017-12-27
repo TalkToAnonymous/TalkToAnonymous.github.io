@@ -75,6 +75,10 @@ $(function () {
 			this.database.ref(reference).push(child);
 		};
 
+		firebaseUtilObj.prototype.getFirebaseObject = function(reference, callback) {
+			this.database.ref(reference).once(callback);
+		};
+
 		return firebaseUtilObj;
 	})();
 });

@@ -19,6 +19,7 @@ $(function () {
 			this.signUp.hide();
 			$('body').addClass('body--dashboard')
 			.removeClass('body--sign-in');
+			this.dashboard.hideMessages();
 		};
 
 		landingPageObj.prototype.goToSignIn = function() {
