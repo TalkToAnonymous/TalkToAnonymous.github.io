@@ -42,7 +42,7 @@ $(function () {
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
-			$(document).unbind('click').on('click', '.topic-list-item', this.handleTopicClick);
+			$(document).unbind('click', '.topic-list-item').on('click', '.topic-list-item', this.handleTopicClick);
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
