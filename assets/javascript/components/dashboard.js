@@ -121,6 +121,9 @@ $(function () {
 				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
 				this.firebaseUtil.stopWatchingList(messagesRef);
 				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+				setTimeout(function() {
+					$('.panel-body').scrollTop($('#messages-list').height());
+				}, 1000);
 			}
 		}
 
@@ -185,7 +188,7 @@ $(function () {
 
 				messageContainer.append(message);
 
-				$('#messages-list').append(messageContainer);
+				$('#messages-list').append(messageContainer);				
 			}
 		};
 
