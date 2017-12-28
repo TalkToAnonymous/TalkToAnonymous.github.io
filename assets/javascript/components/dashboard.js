@@ -42,7 +42,7 @@ $(function () {
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
-			$(document).unbind('click').on('click', '.topic-list-item', this.handleTopicClick);
+			$(document).unbind('click', '.topic-list-item').on('click', '.topic-list-item', this.handleTopicClick);
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
@@ -121,6 +121,9 @@ $(function () {
 				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
 				this.firebaseUtil.stopWatchingList(messagesRef);
 				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+				setTimeout(function() {
+					$('.panel-body').scrollTop($('#messages-list').height());
+				}, 1000);
 			}
 		}
 
@@ -185,7 +188,7 @@ $(function () {
 
 				messageContainer.append(message);
 
-				$('#messages-list').append(messageContainer);
+				$('#messages-list').append(messageContainer);				
 			}
 		};
 
