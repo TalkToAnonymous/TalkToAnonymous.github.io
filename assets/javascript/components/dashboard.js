@@ -13,12 +13,15 @@ $(function () {
 			this.initializeTopic = this.initializeTopic.bind(this);
 			this.addMessageToTheConversation = this.addMessageToTheConversation.bind(this);
 			this.handleMessageAdd = this.handleMessageAdd.bind(this);
-
-
+			this.initializeMessageControls = this.initializeMessageControls.bind(this);
+			this.addGiphyAsMessage = this.addGiphyAsMessage.bind(this);
+			this.addSmileyToMessage = this.addSmileyToMessage.bind(this);
 			this.dashboardContainer = $('#dashboard-container');
 			this.firebaseUtil = firebaseUtil;
 			this.currentTopic = null;
 			this.currentUser = null;
+			this.giphyModal = new app.giphyModal();
+			this.smileyModal = new app.smileyModal();
 		};
 
 		dashboardObj.prototype.showMessages = function () {
@@ -43,6 +46,34 @@ $(function () {
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
+		dashboardObj.prototype.initializeMessageControls = function() {
+			this.showMessages();
+			this.giphyModal.initialize(this.addGiphyAsMessage);
+			this.smileyModal.initialize(this.addSmileyToMessage);
+		};
+
+		dashboardObj.prototype.addGiphyAsMessage = function(imageUrl) {
+			if(!imageUrl) {
+				return false;
+			}
+
+			const messageObj = {
+				value: imageUrl,
+				sender:  this.currentUser.uid,
+				moment: moment.now(),
+				isImage: true
+			};
+
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+		};
+
+		dashboardObj.prototype.addSmileyToMessage = function(smiley) {
+			const message = $('#usermsg'),
+			messageVal = $('#usermsg').val(),
+			caretPos = message[0].selectionStart;
+			message.val(messageVal.substring(0, caretPos) + smiley + messageVal.substring(caretPos));
+		};
+
 		dashboardObj.prototype.handleTopicClick = function(event) {
 			const target = $(event.currentTarget);
 			$('.list-group-item').removeClass('active');
@@ -50,24 +81,26 @@ $(function () {
 			const key = target.attr('data-key');
 			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
 		};
-
+		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
 			event.preventDefault();
-			const message = $('#usermsg').val();
+			const message = $('#usermsg').val().trim();
 			if(!message) {
 				return false;
 			}
+
 			const messageObj = {
 				value: message,
 				sender:  this.currentUser.uid,
-				moment: moment.now()
+				moment: moment.now(),
+				isImage: false
 			};
+
 			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
 			$('#usermsg').val('');
 		}
 
 		dashboardObj.prototype.initializeTopic = function(topicSnap) {
-			this.showMessages();
 			if(this.currentTopic) {
 				if(this.currentTopic.key === topicSnap.key) {
 					return false;
@@ -78,6 +111,7 @@ $(function () {
 			}
 
 			if(topicSnap) {
+				this.initializeMessageControls();
 				$('#messages-list').empty();
 				this.currentTopic = {
 					key: topicSnap.key,
@@ -112,6 +146,7 @@ $(function () {
 
 			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
 			this.firebaseUtil.getFirebaseObject('topics/' + topicSnapShot.key, this.initializeTopic);
+			$('#topic-title').val('');
 			$('#add-topic-modal').modal('hide');
 		};
 
@@ -140,7 +175,14 @@ $(function () {
 					message.addClass('left-message');
 				}
 				messageContainer.attr({ 'data-key': messageSnapShot.key });
-				message.text(messageSnapShotVal.value);
+
+				if(messageSnapShotVal.isImage) {
+					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
+					message.append(imgElement);
+				} else {
+					message.text(messageSnapShotVal.value);
+				}
+
 				messageContainer.append(message);
 
 				$('#messages-list').append(messageContainer);

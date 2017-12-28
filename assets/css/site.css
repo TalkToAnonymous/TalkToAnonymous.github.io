@@ -152,3 +152,30 @@ body {
   float: right;
 }
 
+.giphy-container {
+  height: 300px;
+  width: 40vmin;
+}
+
+.popover {
+  max-width: none;
+}
+
+
+.giphy-item {
+  border: none;
+}
+
+#giphy-carousel .carousel-inner .gif-image {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-inner .item {
+  height: 250px;
+}
+
+.carousel-inner .item {
+  height: 250px;
+}
