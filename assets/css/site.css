@@ -197,3 +197,7 @@ body {
   max-height: 240px;
   overflow-y: auto;
 }
+
+#messages-list {
+  list-style-type: none;
+}
