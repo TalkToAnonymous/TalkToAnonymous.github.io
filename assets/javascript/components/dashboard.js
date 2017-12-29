@@ -22,10 +22,22 @@ $(function () {
 			this.currentUser = null;
 			this.giphyModal = new app.giphyModal();
 			this.smileyModal = new app.smileyModal();
+			this.users = [];
+			this.colors = {};
 		};
 
 		dashboardObj.prototype.showMessages = function () {
 			$('#message-container').removeClass('is-hidden');
+		};
+
+
+		dashboardObj.prototype.getRandomColor = function() {
+			let r = 0, g = 0, b = 0;
+			r = Math.floor(Math.random() * 180);
+			g = Math.floor(Math.random() * 180);
+			b = Math.floor(Math.random() * 180);
+
+			return `rgba(${r}, ${g}, ${b}, 0.6)`;
 		};
 
 		dashboardObj.prototype.hideMessages = function() {
@@ -37,12 +49,13 @@ $(function () {
 			$('#topics').empty();
 			$('#messages-list').empty();
 			this.currentUser = user;
+			this.currentUser.messageColor = this.getRandomColor();
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
 			this.firebaseUtil.stopWatchingList('topics');
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
-			$(document).unbind('click').on('click', '.topic-list-item', this.handleTopicClick);
+			$(document).unbind('click', '.topic-list-item').on('click', '.topic-list-item', this.handleTopicClick);
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
@@ -121,6 +134,9 @@ $(function () {
 				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
 				this.firebaseUtil.stopWatchingList(messagesRef);
 				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+				setTimeout(function() {
+					$('.panel-body').scrollTop($('#messages-list').height());
+				}, 1000);
 			}
 		}
 
@@ -167,12 +183,21 @@ $(function () {
 		dashboardObj.prototype.handleMessageAdd = function (messageSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
+				const messageAddTime = messageSnapShotVal.moment;
+				const messageDisplay = moment(messageAddTime).format("MMM DD, YYYY hh:mm:ss a");
+				console.log(messageDisplay);
 				const messageContainer = $('<li class="clearfix">');
 				const message = $('<div>');
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
 					message.addClass('right-message');
+					message.addClass('right-message').css({'background-color': this.currentUser.messageColor});
 				} else {
-					message.addClass('left-message');
+					if(this.users.indexOf(messageSnapShotVal.sender) === -1) {
+						this.users.push(messageSnapShotVal.sender);
+						this.colors[messageSnapShotVal.sender] = this.getRandomColor();;
+					}
+
+					message.addClass('left-message').css({'background-color': this.colors[messageSnapShotVal.sender]});
 				}
 				messageContainer.attr({ 'data-key': messageSnapShot.key });
 
@@ -181,11 +206,25 @@ $(function () {
 					message.append(imgElement);
 				} else {
 					message.text(messageSnapShotVal.value);
+					const messageText = $('<div>');
+					messageText.text(messageSnapShotVal.value);
+					message.append(messageText);
+				}
+				
+				const timeStamp = $('<div class="timestamp">');
+				timeStamp.text(moment(messageSnapShotVal.moment).fromNow());
+				
+				if(messageSnapShotVal.sender === this.currentUser.uid) {
+					timeStamp.append('<span class="glyphicon glyphicon-time"></span>');
+				} else {
+					timeStamp.prepend('<span class="glyphicon glyphicon-time"></span>');
 				}
 
+				message.append(timeStamp);
 				messageContainer.append(message);
 
-				$('#messages-list').append(messageContainer);
+				$('#messages-list').append(messageContainer);	
+				$('.panel-body').scrollTop($('#messages-list').height());			
 			}
 		};
 

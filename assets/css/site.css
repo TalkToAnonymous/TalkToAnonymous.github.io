@@ -99,7 +99,7 @@ body {
 }
 
 .body--dashboard {
-    background-image: none;
+  background-image: none;
 }
 
 .body--dashboard > .container {
@@ -120,14 +120,14 @@ body {
 }
 
 .btn--custom-large {
-    padding: 10px;
-    width: 55px;
-    height: 55px;
-    float: right;
-    margin-right: 10px;
-    margin-top: -10px;
-    font-size: 30px;
-    line-height: 30px;
+  padding: 10px;
+  width: 55px;
+  height: 55px;
+  float: right;
+  margin-right: 10px;
+  margin-top: -10px;
+  font-size: 30px;
+  line-height: 30px;
 }
 
 #message-container .input-group,
@@ -146,10 +146,34 @@ body {
 
 .left-message {
   float: left;
+  text-align: left;
+  padding: 10px;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  position: relative;
+  color: #FFF;
+  border-top-left-radius: 0px;
 }
 
 .right-message {
   float: right;
+  text-align: right;
+  padding: 10px;
+  border-radius: 20px;
+  margin-bottom: 5px;
+  color: #FFF;
+  position: relative;
+  border-bottom-right-radius: 0px;
+}
+
+.timestamp {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.timestamp span {
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .giphy-container {
@@ -178,4 +202,28 @@ body {
 
 .carousel-inner .item {
   height: 250px;
+}
+
+
+.smiley-container {
+  height: 300px;
+  width: 40vmin;
+}
+
+.smiley-item {
+  border: none;
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#smiley-list {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+#messages-list {
+  list-style: none;
+  padding: 20px;
+  font-size: 16px;
 }
