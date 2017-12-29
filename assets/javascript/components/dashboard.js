@@ -28,6 +28,7 @@ $(function () {
 
 		dashboardObj.prototype.showMessages = function () {
 			$('#message-container').removeClass('is-hidden');
+			$('#message-container-initial').addClass('is-hidden');
 		};
 
 
@@ -42,6 +43,7 @@ $(function () {
 
 		dashboardObj.prototype.hideMessages = function() {
 			$('#message-container').addClass('is-hidden');
+			$('#message-container-initial').removeClass('is-hidden');
 		};
 
 		dashboardObj.prototype.initialize = function (user) {
@@ -93,6 +95,17 @@ $(function () {
 			target.addClass('active');
 			const key = target.attr('data-key');
 			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
+			$('#topics-container')
+			.addClass('hidden-sm')
+			.addClass('hidden-xs');
+			$('#message-container')
+			.removeClass('hidden-sm')
+			.removeClass('hidden-xs');
+			$('#message-container-initial')
+			.removeClass('hidden-sm')
+			.removeClass('hidden-xs');
+			$('#toggle-columns').find('.glyphicon-share-alt').removeClass('flip');
+			$('#toggle-columns').attr('data-toggle', 'message');
 		};
 		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
@@ -210,7 +223,7 @@ $(function () {
 					messageText.text(messageSnapShotVal.value);
 					message.append(messageText);
 				}
-				
+
 				const timeStamp = $('<div class="timestamp">');
 				timeStamp.text(moment(messageSnapShotVal.moment).fromNow());
 				

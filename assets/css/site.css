@@ -21,7 +21,7 @@ html {
 
 
 body > .container {
-  padding: 60px 15px 0;
+  padding: 30px 15px 0;
 }
 
 .navbar {
@@ -103,7 +103,7 @@ body {
 }
 
 .body--dashboard > .container {
-  height: calc(100% - 182px);
+  height: calc(100% - 152px);
 }
 
 .height-full {
@@ -226,4 +226,23 @@ body {
   list-style: none;
   padding: 20px;
   font-size: 16px;
+}
+
+.image-row {
+  width: 100%;
+}
+
+.btn-custom--abs {
+  padding: 10px;
+  width: 55px;
+  height: 55px;
+  float: right;
+  font-size: 30px;
+  line-height: 30px;
+  top: 80px;
+  position: absolute;
+}
+
+.flip {
+  transform: scaleX(-1);
 }
