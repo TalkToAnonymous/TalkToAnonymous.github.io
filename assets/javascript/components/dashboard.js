@@ -170,23 +170,33 @@ $(function () {
 		dashboardObj.prototype.handleMessageAdd = function (messageSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
+				const messageAddTime = messageSnapShotVal.moment;
+				const messageDisplay = moment(messageAddTime).format("MMM DD, YYYY hh:mm:ss a");
+				console.log(messageDisplay);
 				const messageContainer = $('<li class="clearfix">');
+				const messageTimeDisplay = $('<div id="time">');
 				const message = $('<div>');
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
 					message.addClass('right-message');
+					messageTimeDisplay.addClass('right-message');
 				} else {
 					message.addClass('left-message');
+					messageTimeDisplay.addClass('left-message');
 				}
 				messageContainer.attr({ 'data-key': messageSnapShot.key });
 
 				if(messageSnapShotVal.isImage) {
 					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
 					message.append(imgElement);
+					messageTimeDisplay.text(messageDisplay);
 				} else {
 					message.text(messageSnapShotVal.value);
+					messageTimeDisplay.text(messageDisplay);
+					
 				}
 
 				messageContainer.append(message);
+				messageContainer.append(messageTimeDisplay);
 
 				$('#messages-list').append(messageContainer);				
 			}
