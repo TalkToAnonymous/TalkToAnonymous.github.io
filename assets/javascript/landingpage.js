@@ -40,6 +40,41 @@ $(function () {
 
 		landingPageObj.prototype.initialize = function() {
 			this.firebaseUtil.initialize(this.goToSignIn, this.goToDashboard);
+			$(document).unbind('click', '#toggle-columns').on('click', '#toggle-columns', function(event) {
+				const target = $(event.currentTarget);
+				if(target.attr('data-toggle') === 'message') {
+					$('#topics-container')
+					.removeClass('hidden-sm')
+					.removeClass('hidden-xs');
+					$('#message-container')
+					.addClass('hidden-sm')
+					.addClass('hidden-xs');
+					$('#message-container-initial')
+					.addClass('hidden-sm')
+					.addClass('hidden-xs');
+					target.find('.glyphicon-share-alt').addClass('flip');
+					target.attr('data-toggle', 'topic');
+				} else {
+					$('#topics-container')
+					.addClass('hidden-sm')
+					.addClass('hidden-xs');
+					$('#message-container')
+					.removeClass('hidden-sm')
+					.removeClass('hidden-xs');
+					$('#message-container-initial')
+					.removeClass('hidden-sm')
+					.removeClass('hidden-xs');
+					target.find('.glyphicon-share-alt').removeClass('flip');
+					target.attr('data-toggle', 'message');
+				}
+			});
+			$('body').on('click', function (e) {
+				$('[data-toggle="popover"]').each(function () {
+					if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+						$(this).popover('hide');
+					}
+				});
+			});
 		}
 
 		return landingPageObj;
