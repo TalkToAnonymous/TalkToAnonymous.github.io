@@ -22,14 +22,29 @@ $(function () {
 			this.currentUser = null;
 			this.giphyModal = new app.giphyModal();
 			this.smileyModal = new app.smileyModal();
+			this.users = [];
+			this.colors = {};
 		};
 
 		dashboardObj.prototype.showMessages = function () {
 			$('#message-container').removeClass('is-hidden');
+			$('#message-container-initial').addClass('is-hidden');
+			$('#usermsg').focus();
+		};
+
+
+		dashboardObj.prototype.getRandomColor = function() {
+			let r = 0, g = 0, b = 0;
+			r = Math.floor(Math.random() * 180);
+			g = Math.floor(Math.random() * 180);
+			b = Math.floor(Math.random() * 180);
+
+			return `rgba(${r}, ${g}, ${b}, 0.6)`;
 		};
 
 		dashboardObj.prototype.hideMessages = function() {
 			$('#message-container').addClass('is-hidden');
+			$('#message-container-initial').removeClass('is-hidden');
 		};
 
 		dashboardObj.prototype.initialize = function (user) {
@@ -37,10 +52,12 @@ $(function () {
 			$('#topics').empty();
 			$('#messages-list').empty();
 			this.currentUser = user;
+			this.currentUser.messageColor = this.getRandomColor();
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
 			this.firebaseUtil.stopWatchingList('topics');
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
+			$('#start-private').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
 			$(document).unbind('click', '.topic-list-item').on('click', '.topic-list-item', this.handleTopicClick);
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
@@ -80,6 +97,17 @@ $(function () {
 			target.addClass('active');
 			const key = target.attr('data-key');
 			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
+			$('#topics-container')
+			.addClass('hidden-sm')
+			.addClass('hidden-xs');
+			$('#message-container')
+			.removeClass('hidden-sm')
+			.removeClass('hidden-xs');
+			$('#message-container-initial')
+			.removeClass('hidden-sm')
+			.removeClass('hidden-xs');
+			$('#toggle-columns').find('.glyphicon-share-alt').removeClass('flip');
+			$('#toggle-columns').attr('data-toggle', 'message');
 		};
 		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
@@ -117,6 +145,10 @@ $(function () {
 					key: topicSnap.key,
 					value: topicSnap.val()
 				};
+
+				const badge = $('a[data-key="'+ this.currentTopic.key +'"] .badge');
+				badge.text(0);
+
 				$("#conversation-name").text(this.currentTopic.value.title);
 				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
 				this.firebaseUtil.stopWatchingList(messagesRef);
@@ -131,9 +163,23 @@ $(function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
 
-		dashboardObj.prototype.showSaveTopic = function () {
+		dashboardObj.prototype.showSaveTopic = function (event) {
+			const target = $(event.currentTarget);
+			const topicForm = $('#add-topic-form');
+			const modalTitle = $('#add-topic-modal .modal-title');
+			if(target.attr('data-privacy') === 'true') {
+				topicForm.attr('data-privacy', 'true');
+				modalTitle.text('Add Topic to start a Private Conversation');
+			} else {
+				topicForm.attr('data-privacy', 'false');
+				modalTitle.text('Add Topic to start a Public Conversation');
+			}
+
 			$('#add-topic-modal').modal('show');
-			$('#add-topic-form').unbind('submit').on('submit', this.saveTopic);
+			setTimeout(function() {
+				$('#topic-title').focus();
+			}, 500);
+			topicForm.unbind('submit').on('submit', this.saveTopic);
 		};
 
 		dashboardObj.prototype.saveTopic = function (event) {
@@ -142,13 +188,36 @@ $(function () {
 			if(!title) {
 				return false;
 			}
+			const isPrivate = $(event.target).attr('data-privacy') === 'true' ? true : false;
 
+			if(isPrivate) {
+				this.pushRandomUserToTopic(title, isPrivate);
+			} else {
+				this.pushTopic(title, isPrivate, [this.currentUser.uid]);
+			}
+		};
+
+		dashboardObj.prototype.pushRandomUserToTopic = function(title, isPrivate) {
+			this.firebaseUtil.getRandomOnlineUser(this.currentUser.uid, function(anonymousUser) {
+				let users = [this.currentUser.uid]
+				if(anonymousUser) {
+					users.push(anonymousUser.val());
+				}
+
+				this.pushTopic(title, isPrivate, users);
+			}.bind(this));
+		};
+
+		dashboardObj.prototype.pushTopic = function(title, isPrivate, users) {
 			const topic = {
-				title: title
+				title: title,
+				isPrivate: isPrivate,
+				users: users
 			};
 
 			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
 			this.firebaseUtil.getFirebaseObject('topics/' + topicSnapShot.key, this.initializeTopic);
+
 			$('#topic-title').val('');
 			$('#add-topic-modal').modal('hide');
 		};
@@ -160,10 +229,40 @@ $(function () {
 		dashboardObj.prototype.handleTopicAdd = function (topicSnapShot) {
 			if(topicSnapShot) {
 				const topicSnapShotVal = topicSnapShot.val();
-				const topic = $('<a href="#" class="list-group-item topic-list-item">');
-				topic.attr({ 'data-key': topicSnapShot.key });
-				topic.text(topicSnapShotVal.title);
-				$('#topics').append(topic);
+				let canShowTopic = true;
+
+				if(topicSnapShotVal.isPrivate && topicSnapShotVal.users.indexOf(this.currentUser.uid) === -1) {
+					canShowTopic = false;
+				}
+
+				if(canShowTopic) {
+					const topic = $('<a href="#" class="list-group-item topic-list-item">');
+					topic.attr({ 'data-key': topicSnapShot.key });
+					let icon;
+
+					if(topicSnapShotVal.isPrivate) {
+						icon = $('<i class="fa fa-user-secret margin-right-5" aria-hidden="true"></i>');
+					} else {
+						icon = $('<i class="fa fa-globe margin-right-5" aria-hidden="true"></i>');
+					}
+
+					const badge = $('<span class="badge">');
+					const topicTitle = $(' <span>');
+
+					topic.append(icon);
+					topicTitle.text(topicSnapShotVal.title);
+					if(topicSnapShotVal.messages) {
+						badge.text(Object.keys(topicSnapShotVal.messages).length);
+					} else {
+						badge.text(0);
+					}
+
+					topic.append(topicTitle);
+					topic.append(badge);
+
+
+					$('#topics').append(topic);
+				}
 			}
 		};
 
@@ -171,34 +270,49 @@ $(function () {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
 				const messageAddTime = messageSnapShotVal.moment;
-				const messageDisplay = moment(messageAddTime).format("MMM DD, YYYY hh:mm:ss a");
-				console.log(messageDisplay);
 				const messageContainer = $('<li class="clearfix">');
-				const messageTimeDisplay = $('<div id="time">');
 				const message = $('<div>');
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
 					message.addClass('right-message');
-					messageTimeDisplay.addClass('right-message');
+					message.addClass('right-message').css({'background-color': this.currentUser.messageColor});
 				} else {
-					message.addClass('left-message');
-					messageTimeDisplay.addClass('left-message');
+					if(this.users.indexOf(messageSnapShotVal.sender) === -1) {
+						this.users.push(messageSnapShotVal.sender);
+						this.colors[messageSnapShotVal.sender] = this.getRandomColor();;
+					}
+
+					message.addClass('left-message').css({'background-color': this.colors[messageSnapShotVal.sender]});
 				}
 				messageContainer.attr({ 'data-key': messageSnapShot.key });
+
+				const badge = $('a[data-key="'+ this.currentTopic.key +'"] .badge');
+				let numMessages = parseInt(badge.text());
+				numMessages++;
+				badge.text(numMessages);
 
 				if(messageSnapShotVal.isImage) {
 					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
 					message.append(imgElement);
-					messageTimeDisplay.text(messageDisplay);
 				} else {
-					message.text(messageSnapShotVal.value);
-					messageTimeDisplay.text(messageDisplay);
-					
+					const messageText = $('<div>');
+					messageText.text(messageSnapShotVal.value);
+					message.append(messageText);
 				}
 
-				messageContainer.append(message);
-				messageContainer.append(messageTimeDisplay);
+				const timeStamp = $('<div class="timestamp">');
+				timeStamp.text(moment(messageSnapShotVal.moment).fromNow());
+				
+				if(messageSnapShotVal.sender === this.currentUser.uid) {
+					timeStamp.append('<span class="glyphicon glyphicon-time"></span>');
+				} else {
+					timeStamp.prepend('<span class="glyphicon glyphicon-time"></span>');
+				}
 
-				$('#messages-list').append(messageContainer);				
+				message.append(timeStamp);
+				messageContainer.append(message);
+
+				$('#messages-list').append(messageContainer);	
+				$('.panel-body').scrollTop($('#messages-list').height());			
 			}
 		};
 

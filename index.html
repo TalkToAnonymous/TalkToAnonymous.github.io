@@ -10,7 +10,7 @@
 	<script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 
 </head>
-<body>
+<body tabindex="0">
 	<header>
       <!-- Fixed navbar -->
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -50,7 +50,7 @@
 				</div>
 			</div>
 		</div>
-
+		<button id="toggle-columns" data-toggle="message" class="btn btn-danger circle btn-custom--abs visible-xs visible-sm"><span class="glyphicon glyphicon-share-alt"></span></button>
 		<div id="sign-up-container" class="row is-hidden vertical-align">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="panel panel-default">
@@ -103,7 +103,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title">Add Topic to start Conversation</h4>
+						<h4 class="modal-title"></h4>
 					</div>
 					<div class="modal-body">
 						<form id="add-topic-form">
@@ -123,7 +123,7 @@
 		</div>
 		
 		<div id="dashboard-container" class="row is-hidden height-full">
-			<div class="col-md-4 height-full">
+			<div id="topics-container" class="col-md-4 height-full hidden-sm hidden-xs">
 				<div class="panel panel-default height-full">
 					<div class="panel-heading">
 						<h2 class="panel-title"><span class="glyphicon glyphicon glyphicon-list-alt"></span> Topics</h2>
@@ -134,10 +134,10 @@
 					</div>
 					<div class="clearfix">
 						<div class="input-group">
-							<button id="add-topic" title="Add Topic" class="btn btn-primary circle btn--custom-large">
+							<button id="add-topic" data-privacy="false" title="Add Topic" class="btn btn-primary circle btn--custom-large">
 								<span class="glyphicon glyphicon-plus"></span>
 							</button>
-							<button id="start-private" title="Start a Private Anonymous Conversation" class="btn btn-danger circle btn--custom-large">
+							<button id="start-private" data-privacy="true" title="Start a Private Anonymous Conversation" class="btn btn-danger circle btn--custom-large">
 								<i class="fa fa-user-secret" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -192,7 +192,7 @@
 										<span class="glyphicon glyphicon-picture"></span>
 									</button>
 								</span>
-								<input required type="text" class="form-control" autocomplete="off" id="usermsg" name="usermsg" placeholder="/giphy /smile Your message">
+								<input required type="text" class="form-control" autocomplete="off" id="usermsg" name="usermsg" placeholder="Your message or giphy/ smile/">
 								<span class="input-group-btn">
 									<button class="btn btn-default" title="Send Message"  type="submit"><span class="glyphicon glyphicon-send"></span></button>
 								</span>
@@ -220,6 +220,28 @@
 								</span>
 						    </div>
 						</form>
+					</div>
+				</div>
+			</div>
+			<div id="message-container-initial" class="col-md-8 height-full">
+				<div class="panel panel-default height-full">
+					<div class="panel-heading">
+						<h2 class="panel-title"><span class="fa fa-comments-o"></span> <span id="conversation-name">Talk to Anonymous</span></h2>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-xs-5 col-xs-offset-1">
+								<img class="image-row" src="assets/images/anonymity_3.png" alt="I Cherish the principle of Anonymity">
+							</div>
+							<div class="col-xs-5">
+								<img class="image-row" src="assets/images/anonymity_4.png" alt="Why?">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-5 col-xs-offset-3">
+								<img class="image-row" src="assets/images/anonymity_1.png" alt="Because I can't remember anyone's names">
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

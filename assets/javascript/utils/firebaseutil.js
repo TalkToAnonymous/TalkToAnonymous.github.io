@@ -22,13 +22,23 @@ $(function () {
 		// @param {function} showDashboard callback function to route user to dashboard page
 		firebaseUtilObj.prototype.initialize = function(showSignIn, showDashboard) {
 			firebase.initializeApp(config);
-			this.database = firebase.database(); 
+			this.database = firebase.database();
+			const self = this;
+			firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 			firebase.auth().onAuthStateChanged(function(user) {
 				// If user is authenticated route to dashboard
 				// else route to sign in page
+				let onlineUserRef;
 				if (user) {
 					showDashboard(user);
+					onlineUserRef = self.pushChild('onlineUsers', user.uid);
+					$(window).unbind("beforeunload").bind("beforeunload", function() {
+						self.removeChild('onlineUsers/' + onlineUserRef.key);
+					});
 				} else {
+					if(onlineUserRef) {
+						self.removeChild('onlineUsers/' + onlineUserRef.key);
+					}
 					showSignIn();
 				}
 			});
@@ -75,8 +85,26 @@ $(function () {
 			return this.database.ref(reference).push(child);
 		};
 
+		firebaseUtilObj.prototype.removeChild = function(reference) {
+			return this.database.ref(reference).remove();
+		};
+
 		firebaseUtilObj.prototype.getFirebaseObject = function(reference, callback) {
 			this.database.ref(reference).once('value', callback);
+		};
+
+		firebaseUtilObj.prototype.getRandomOnlineUser = function(currentUser, callback) {
+			this.database.ref('onlineUsers').once('value', function(usersSnap) {
+				let users = [];
+				usersSnap.forEach(function(snapshot){
+					if(currentUser !== snapshot.val()) {
+						users.push(snapshot);
+					}
+				});
+
+				const randomIndex = Math.round(Math.random() * users.length - 1);
+				callback(users[randomIndex]);
+			});
 		};
 
 		return firebaseUtilObj;
