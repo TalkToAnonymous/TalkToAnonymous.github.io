@@ -93,6 +93,20 @@ $(function () {
 			this.database.ref(reference).once('value', callback);
 		};
 
+		firebaseUtilObj.prototype.getRandomOnlineUser = function(currentUser, callback) {
+			this.database.ref('onlineUsers').once('value', function(usersSnap) {
+				let users = [];
+				usersSnap.forEach(function(snapshot){
+					if(currentUser !== snapshot.val()) {
+						users.push(snapshot);
+					}
+				});
+
+				const randomIndex = Math.round(Math.random() * users.length - 1);
+				callback(users[randomIndex]);
+			});
+		};
+
 		return firebaseUtilObj;
 	})();
 });
