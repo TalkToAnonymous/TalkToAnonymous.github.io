@@ -66,6 +66,7 @@ $(function () {
 					.removeClass('hidden-xs');
 					target.find('.glyphicon-share-alt').removeClass('flip');
 					target.attr('data-toggle', 'message');
+					$('#usermsg').focus();
 				}
 			});
 			$('body').on('click', function (e) {
