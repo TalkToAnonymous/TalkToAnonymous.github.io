@@ -32,6 +32,7 @@ $(function () {
 			$('#add-smiley').popover();
 			$('#usermsg').unbind('keyup').on('keyup', this.handleUserMessageTemplate);
 			$('#add-smiley').on('shown.bs.popover', this.handlePopoverShow);
+			delete smilies.WHITE_SMILING_FACE;
 			this.smilies = smilies;
 		}
 

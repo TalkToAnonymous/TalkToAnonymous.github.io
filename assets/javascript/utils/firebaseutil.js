@@ -22,13 +22,23 @@ $(function () {
 		// @param {function} showDashboard callback function to route user to dashboard page
 		firebaseUtilObj.prototype.initialize = function(showSignIn, showDashboard) {
 			firebase.initializeApp(config);
-			this.database = firebase.database(); 
+			this.database = firebase.database();
+			const self = this;
+			firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 			firebase.auth().onAuthStateChanged(function(user) {
 				// If user is authenticated route to dashboard
 				// else route to sign in page
+				let onlineUserRef;
 				if (user) {
 					showDashboard(user);
+					onlineUserRef = self.pushChild('onlineUsers', user.uid);
+					$(window).unbind("beforeunload").bind("beforeunload", function() {
+						self.removeChild('onlineUsers/' + onlineUserRef.key);
+					});
 				} else {
+					if(onlineUserRef) {
+						self.removeChild('onlineUsers/' + onlineUserRef.key);
+					}
 					showSignIn();
 				}
 			});
@@ -73,6 +83,10 @@ $(function () {
 		// @param {object} child child object that needs to be added
 		firebaseUtilObj.prototype.pushChild = function(reference, child) {
 			return this.database.ref(reference).push(child);
+		};
+
+		firebaseUtilObj.prototype.removeChild = function(reference) {
+			return this.database.ref(reference).remove();
 		};
 
 		firebaseUtilObj.prototype.getFirebaseObject = function(reference, callback) {
