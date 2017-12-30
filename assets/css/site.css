@@ -246,3 +246,7 @@ body {
 .flip {
   transform: scaleX(-1);
 }
+
+.margin-right-5 {
+  margin-right: 5px;
+}
