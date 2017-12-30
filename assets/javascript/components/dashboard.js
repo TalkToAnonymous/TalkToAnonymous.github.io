@@ -145,6 +145,10 @@ $(function () {
 					key: topicSnap.key,
 					value: topicSnap.val()
 				};
+
+				const badge = $('a[data-key="'+ this.currentTopic.key +'"] .badge');
+				badge.text(0);
+
 				$("#conversation-name").text(this.currentTopic.value.title);
 				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
 				this.firebaseUtil.stopWatchingList(messagesRef);
@@ -185,10 +189,30 @@ $(function () {
 				return false;
 			}
 			const isPrivate = $(event.target).attr('data-privacy') === 'true' ? true : false;
+
+			if(isPrivate) {
+				this.pushRandomUserToTopic(title, isPrivate);
+			} else {
+				this.pushTopic(title, isPrivate, [this.currentUser.uid]);
+			}
+		};
+
+		dashboardObj.prototype.pushRandomUserToTopic = function(title, isPrivate) {
+			this.firebaseUtil.getRandomOnlineUser(this.currentUser.uid, function(anonymousUser) {
+				let users = [this.currentUser.uid]
+				if(anonymousUser) {
+					users.push(anonymousUser.val());
+				}
+
+				this.pushTopic(title, isPrivate, users);
+			}.bind(this));
+		};
+
+		dashboardObj.prototype.pushTopic = function(title, isPrivate, users) {
 			const topic = {
 				title: title,
 				isPrivate: isPrivate,
-				users: [this.currentUser.uid]
+				users: users
 			};
 
 			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
@@ -205,10 +229,40 @@ $(function () {
 		dashboardObj.prototype.handleTopicAdd = function (topicSnapShot) {
 			if(topicSnapShot) {
 				const topicSnapShotVal = topicSnapShot.val();
-				const topic = $('<a href="#" class="list-group-item topic-list-item">');
-				topic.attr({ 'data-key': topicSnapShot.key });
-				topic.text(topicSnapShotVal.title);
-				$('#topics').append(topic);
+				let canShowTopic = true;
+
+				if(topicSnapShotVal.isPrivate && topicSnapShotVal.users.indexOf(this.currentUser.uid) === -1) {
+					canShowTopic = false;
+				}
+
+				if(canShowTopic) {
+					const topic = $('<a href="#" class="list-group-item topic-list-item">');
+					topic.attr({ 'data-key': topicSnapShot.key });
+					let icon;
+
+					if(topicSnapShotVal.isPrivate) {
+						icon = $('<i class="fa fa-user-secret margin-right-5" aria-hidden="true"></i>');
+					} else {
+						icon = $('<i class="fa fa-globe margin-right-5" aria-hidden="true"></i>');
+					}
+
+					const badge = $('<span class="badge">');
+					const topicTitle = $(' <span>');
+
+					topic.append(icon);
+					topicTitle.text(topicSnapShotVal.title);
+					if(topicSnapShotVal.messages) {
+						badge.text(Object.keys(topicSnapShotVal.messages).length);
+					} else {
+						badge.text(0);
+					}
+
+					topic.append(topicTitle);
+					topic.append(badge);
+
+
+					$('#topics').append(topic);
+				}
 			}
 		};
 
@@ -230,6 +284,11 @@ $(function () {
 					message.addClass('left-message').css({'background-color': this.colors[messageSnapShotVal.sender]});
 				}
 				messageContainer.attr({ 'data-key': messageSnapShot.key });
+
+				const badge = $('a[data-key="'+ this.currentTopic.key +'"] .badge');
+				let numMessages = parseInt(badge.text());
+				numMessages++;
+				badge.text(numMessages);
 
 				if(messageSnapShotVal.isImage) {
 					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
