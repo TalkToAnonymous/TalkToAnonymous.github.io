@@ -29,6 +29,7 @@ $(function () {
 		dashboardObj.prototype.showMessages = function () {
 			$('#message-container').removeClass('is-hidden');
 			$('#message-container-initial').addClass('is-hidden');
+			$('#usermsg').focus();
 		};
 
 
@@ -56,6 +57,7 @@ $(function () {
 			this.firebaseUtil.stopWatchingList('topics');
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
+			$('#start-private').unbind('click').on('click', this.showSaveTopic);
 			this.hideMessages();
 			$(document).unbind('click', '.topic-list-item').on('click', '.topic-list-item', this.handleTopicClick);
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
@@ -157,9 +159,23 @@ $(function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
 
-		dashboardObj.prototype.showSaveTopic = function () {
+		dashboardObj.prototype.showSaveTopic = function (event) {
+			const target = $(event.currentTarget);
+			const topicForm = $('#add-topic-form');
+			const modalTitle = $('#add-topic-modal .modal-title');
+			if(target.attr('data-privacy') === 'true') {
+				topicForm.attr('data-privacy', 'true');
+				modalTitle.text('Add Topic to start a Private Conversation');
+			} else {
+				topicForm.attr('data-privacy', 'false');
+				modalTitle.text('Add Topic to start a Public Conversation');
+			}
+
 			$('#add-topic-modal').modal('show');
-			$('#add-topic-form').unbind('submit').on('submit', this.saveTopic);
+			setTimeout(function() {
+				$('#topic-title').focus();
+			}, 500);
+			topicForm.unbind('submit').on('submit', this.saveTopic);
 		};
 
 		dashboardObj.prototype.saveTopic = function (event) {
@@ -168,13 +184,16 @@ $(function () {
 			if(!title) {
 				return false;
 			}
-
+			const isPrivate = $(event.target).attr('data-privacy') === 'true' ? true : false;
 			const topic = {
-				title: title
+				title: title,
+				isPrivate: isPrivate,
+				users: [this.currentUser.uid]
 			};
 
 			const topicSnapShot = this.firebaseUtil.pushChild('topics', topic);
 			this.firebaseUtil.getFirebaseObject('topics/' + topicSnapShot.key, this.initializeTopic);
+
 			$('#topic-title').val('');
 			$('#add-topic-modal').modal('hide');
 		};
@@ -197,8 +216,6 @@ $(function () {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
 				const messageAddTime = messageSnapShotVal.moment;
-				const messageDisplay = moment(messageAddTime).format("MMM DD, YYYY hh:mm:ss a");
-				console.log(messageDisplay);
 				const messageContainer = $('<li class="clearfix">');
 				const message = $('<div>');
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
@@ -218,7 +235,6 @@ $(function () {
 					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
 					message.append(imgElement);
 				} else {
-					message.text(messageSnapShotVal.value);
 					const messageText = $('<div>');
 					messageText.text(messageSnapShotVal.value);
 					message.append(messageText);
