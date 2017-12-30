@@ -72,7 +72,7 @@ $(function () {
 			this.database.ref(reference).on('child_added', handler);
 		};
 
-		// Function to stio watching a list
+		// Function to stop watching a list
 		// @param {string} reference to the list in firebase database that has to be watched
 		firebaseUtilObj.prototype.stopWatchingList = function(reference) {
 			this.database.ref(reference).off('child_added');
