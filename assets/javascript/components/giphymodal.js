@@ -16,7 +16,7 @@ $(function () {
 			$('#usermsg').unbind('keyup').on('keyup', this.handleUserMessageTemplate);
 			$('#add-giphy').on('shown.bs.popover', this.handlePopoverShow);
 			const self = this;
-			$('.js-giphy-item').unbind('click');
+			$(document).off('click', '.js-giphy-item');
 			$(document).on('click', '.js-giphy-item', function(event) {
 				event.preventDefault();
 				const target = $(event.currentTarget);

@@ -13,6 +13,7 @@ $(function () {
 			this.initializeTopic = this.initializeTopic.bind(this);
 			this.addMessageToTheConversation = this.addMessageToTheConversation.bind(this);
 			this.handleMessageAdd = this.handleMessageAdd.bind(this);
+			this.initializeMessageControls = this.initializeMessageControls.bind(this);
 			this.addGiphyAsMessage = this.addGiphyAsMessage.bind(this);
 			this.addSmileyToMessage = this.addSmileyToMessage.bind(this);
 			this.dashboardContainer = $('#dashboard-container');
@@ -60,6 +61,12 @@ $(function () {
 			this.hideMessages();
 			$(document).unbind('click', '.topic-list-item').on('click', '.topic-list-item', this.handleTopicClick);
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
+		};
+
+		dashboardObj.prototype.initializeMessageControls = function() {
+			this.showMessages();
+			this.giphyModal.initialize(this.addGiphyAsMessage);
+			this.smileyModal.initialize(this.addSmileyToMessage);
 		};
 
 		dashboardObj.prototype.addGiphyAsMessage = function(imageUrl) {
@@ -133,7 +140,7 @@ $(function () {
 			}
 
 			if(topicSnap) {
-				this.showMessages();
+				this.initializeMessageControls();
 				$('#messages-list').empty();
 				this.currentTopic = {
 					key: topicSnap.key,
