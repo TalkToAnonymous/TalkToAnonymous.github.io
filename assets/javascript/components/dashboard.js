@@ -13,7 +13,6 @@ $(function () {
 			this.initializeTopic = this.initializeTopic.bind(this);
 			this.addMessageToTheConversation = this.addMessageToTheConversation.bind(this);
 			this.handleMessageAdd = this.handleMessageAdd.bind(this);
-			this.initializeMessageControls = this.initializeMessageControls.bind(this);
 			this.addGiphyAsMessage = this.addGiphyAsMessage.bind(this);
 			this.addSmileyToMessage = this.addSmileyToMessage.bind(this);
 			this.dashboardContainer = $('#dashboard-container');
@@ -63,12 +62,6 @@ $(function () {
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
-		dashboardObj.prototype.initializeMessageControls = function() {
-			this.showMessages();
-			this.giphyModal.initialize(this.addGiphyAsMessage);
-			this.smileyModal.initialize(this.addSmileyToMessage);
-		};
-
 		dashboardObj.prototype.addGiphyAsMessage = function(imageUrl) {
 			if(!imageUrl) {
 				return false;
@@ -108,6 +101,7 @@ $(function () {
 			.removeClass('hidden-xs');
 			$('#toggle-columns').find('.glyphicon-share-alt').removeClass('flip');
 			$('#toggle-columns').attr('data-toggle', 'message');
+			$('#usermsg').val('');
 		};
 		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
@@ -139,7 +133,7 @@ $(function () {
 			}
 
 			if(topicSnap) {
-				this.initializeMessageControls();
+				this.showMessages();
 				$('#messages-list').empty();
 				this.currentTopic = {
 					key: topicSnap.key,

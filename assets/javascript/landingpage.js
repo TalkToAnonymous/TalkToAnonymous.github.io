@@ -22,6 +22,7 @@ $(function () {
 			$('body').addClass('body--dashboard')
 			.removeClass('body--sign-in');
 			this.dashboard.hideMessages();
+			$('#toggle-columns').removeClass('is-hidden');
 		};
 
 		//Hide dashboard, show sign in, hide sign up.
@@ -31,6 +32,7 @@ $(function () {
 			this.signUp.hide();
 			$('body').removeClass('body--dashboard')
 			.addClass('body--sign-in');
+			$('#toggle-columns').addClass('is-hidden');
 		}
 
 		//Show signup, hide dashboard and signin.
