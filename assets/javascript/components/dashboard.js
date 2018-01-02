@@ -107,7 +107,7 @@ $(function () {
 			.removeClass('hidden-sm')
 			.removeClass('hidden-xs');
 			$('#toggle-columns').find('.glyphicon-share-alt').removeClass('flip');
-			$('#toggle-columns').attr('data-toggle', 'message');
+			$('#toggle-columns').attr('data-toggle', 'message').find('.button-text').text('Check Topics!!');
 			$('#usermsg').val('');
 		};
 		
