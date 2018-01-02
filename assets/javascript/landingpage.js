@@ -61,6 +61,7 @@ $(function () {
 					.addClass('hidden-sm')
 					.addClass('hidden-xs');
 					target.find('.glyphicon-share-alt').addClass('flip');
+					target.find('.button-text').text('Check Messages!!');
 					target.attr('data-toggle', 'topic');
 				} else {
 					$('#topics-container')
@@ -73,6 +74,7 @@ $(function () {
 					.removeClass('hidden-sm')
 					.removeClass('hidden-xs');
 					target.find('.glyphicon-share-alt').removeClass('flip');
+					target.find('.button-text').text('Check Topics!!');
 					target.attr('data-toggle', 'message');
 					$('#usermsg').focus();
 				}
