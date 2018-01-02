@@ -13,6 +13,10 @@ $(function () {
 		// Firebase util constructor
 		var firebaseUtilObj = function () {
 			this.topicsRef = null;
+			this.onlineUserRef = null;
+			this.handleAuthChange = this.handleAuthChange.bind(this);
+			this.removeOnlineUser = this.removeOnlineUser.bind(this);
+			this.signOutUser = this.signOutUser.bind(this);
 		};
 
 		// Firebase util initialze
@@ -23,26 +27,30 @@ $(function () {
 		firebaseUtilObj.prototype.initialize = function(showSignIn, showDashboard) {
 			firebase.initializeApp(config);
 			this.database = firebase.database();
+			this.showSignIn = showSignIn;
+			this.showDashboard = showDashboard;
 			const self = this;
 			firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
-			firebase.auth().onAuthStateChanged(function(user) {
-				// If user is authenticated route to dashboard
-				// else route to sign in page
-				let onlineUserRef;
-				if (user) {
-					showDashboard(user);
-					onlineUserRef = self.pushChild('onlineUsers', user.uid);
-					$(window).unbind("beforeunload").bind("beforeunload", function() {
-						self.removeChild('onlineUsers/' + onlineUserRef.key);
-					});
-				} else {
-					if(onlineUserRef) {
-						self.removeChild('onlineUsers/' + onlineUserRef.key);
-					}
-					showSignIn();
-				}
-			});
+			firebase.auth().onAuthStateChanged(this.handleAuthChange);
 		};
+
+		firebaseUtilObj.prototype.handleAuthChange = function(user) {
+			// If user is authenticated route to dashboard
+			// else route to sign in page
+			if (user) {
+				this.showDashboard(user);
+				this.onlineUserRef = this.pushChild('onlineUsers', user.uid);
+				$(window).unbind("beforeunload").bind("beforeunload", this.removeOnlineUser);
+			} else {
+				this.showSignIn();
+			}
+		}
+
+		firebaseUtilObj.prototype.removeOnlineUser = function() {
+			if(this.onlineUserRef) {
+				this.removeChild('onlineUsers/' + this.onlineUserRef.key);
+			}
+		}
 
 		// Creates user
 		// @param {string} email validated user email
@@ -60,8 +68,13 @@ $(function () {
 			firebase.auth().signInWithEmailAndPassword(email, password).catch(erroCallBack);
 		};
 
+		firebaseUtilObj.prototype.resetPassword = function(email, successCallback, erroCallBack) {
+			firebase.auth().sendPasswordResetEmail(email).then(successCallback).catch(erroCallBack);
+		};
+
 		// Sign out user utility
 		firebaseUtilObj.prototype.signOutUser = function() {
+			this.removeOnlineUser();
 			firebase.auth().signOut();
 		};
 
@@ -72,7 +85,7 @@ $(function () {
 			this.database.ref(reference).on('child_added', handler);
 		};
 
-		// Function to stio watching a list
+		// Function to stop watching a list
 		// @param {string} reference to the list in firebase database that has to be watched
 		firebaseUtilObj.prototype.stopWatchingList = function(reference) {
 			this.database.ref(reference).off('child_added');
@@ -95,15 +108,25 @@ $(function () {
 
 		firebaseUtilObj.prototype.getRandomOnlineUser = function(currentUser, callback) {
 			this.database.ref('onlineUsers').once('value', function(usersSnap) {
-				let users = [];
+				let allUsers = [];
+				let userKeys = [];
+				let filterdUsers = [];
+
 				usersSnap.forEach(function(snapshot){
 					if(currentUser !== snapshot.val()) {
-						users.push(snapshot);
+						allUsers.push(snapshot);
 					}
 				});
 
-				const randomIndex = Math.round(Math.random() * users.length - 1);
-				callback(users[randomIndex]);
+				allUsers.forEach(function(snapshot){
+					if(userKeys.indexOf(snapshot.val() === -1)) {
+						userKeys.push(snapshot.val());
+						filterdUsers.push(snapshot);
+					}
+				});
+
+				const randomIndex = Math.round(Math.random() * (filterdUsers.length - 1));
+				callback(filterdUsers[randomIndex]);
 			});
 		};
 

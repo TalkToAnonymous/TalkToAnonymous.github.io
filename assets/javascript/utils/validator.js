@@ -1,3 +1,4 @@
+//Add function to validate sign up formats are correct.
 $(function () {
 	app.validator = (function () {
 		var validatorObj = function () {

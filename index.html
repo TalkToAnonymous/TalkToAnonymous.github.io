@@ -23,7 +23,7 @@
 
 	<main class="container">
 		<div id="sign-in-container" class="row is-hidden vertical-align">
-			<div class="col-sm-4 col-sm-offset-4">
+			<div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title"><span class="fa fa-comments-o"></span> Talk to anonymous</h3>
@@ -43,16 +43,21 @@
 								<label for="password"><span class="glyphicon glyphicon-eye-close"></span> Password</label>
 								<input  oninput="this.className='form-control'" required type="password" id="password" class="form-control" placeholder="Password">
 							</div>
-							<button title="Sign In" id="sign-in" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Sign In</button>
-							<a role="button" title="Go to sign up page" class="gutter-left--large" id="go-to-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+							<div class="input-group">
+								<button title="Sign In" id="sign-in" class="btn btn-primary"><span class="glyphicon glyphicon-lock"></span> Sign In</button>
+								<a role="button" title="Go to sign up page" class="gutter-left--large" id="go-to-sign-up"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+							</div>
+							<div class="input-group">
+								<a role="button" title="Send reset password email" id="forgot-password"><i class="fa fa-key" aria-hidden="true"></i> Send Passwrod Reset Email?</a>
+							</div>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		<button id="toggle-columns" data-toggle="message" class="btn btn-danger circle btn-custom--abs visible-xs visible-sm"><span class="glyphicon glyphicon-share-alt"></span></button>
+		<button id="toggle-columns" data-toggle="message" class="btn btn-danger circle btn-custom--abs visible-xs visible-sm is-hidden"><span class="glyphicon glyphicon-share-alt"></span></button>
 		<div id="sign-up-container" class="row is-hidden vertical-align">
-			<div class="col-sm-4 col-sm-offset-4">
+			<div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title"><span class="fa fa-comments-o"></span> Talk to anonymous</h3>

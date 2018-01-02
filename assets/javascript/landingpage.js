@@ -1,3 +1,4 @@
+//Create landing page object
 $(function () {
 	app.landingPage = (function () {
 		let landingPageObj = function() {
@@ -13,6 +14,7 @@ $(function () {
 			this.dashboard = new app.dashboard(this.firebaseUtil);					
 		}
 
+		//Show user's dashboard, hide signin and signup once user has signed up, and signed in. Hide messages, show comic strip.
 		landingPageObj.prototype.goToDashboard = function(user) {
 			this.dashboard.initialize(user);
 			this.signIn.hide();
@@ -20,16 +22,20 @@ $(function () {
 			$('body').addClass('body--dashboard')
 			.removeClass('body--sign-in');
 			this.dashboard.hideMessages();
+			$('#toggle-columns').removeClass('is-hidden');
 		};
 
+		//Hide dashboard, show sign in, hide sign up.
 		landingPageObj.prototype.goToSignIn = function() {
 			this.dashboard.hide();
 			this.signIn.initialize();
 			this.signUp.hide();
 			$('body').removeClass('body--dashboard')
 			.addClass('body--sign-in');
+			$('#toggle-columns').addClass('is-hidden');
 		}
 
+		//Show signup, hide dashboard and signin.
 		landingPageObj.prototype.goToSignUp = function() {
 			this.dashboard.hide();
 			this.signIn.hide();
@@ -38,6 +44,8 @@ $(function () {
 			.addClass('body--sign-in');
 		}
 
+		//If user is signed in, show topics and initial message container with coming strip.
+		//Else, hide topics and initial message container.
 		landingPageObj.prototype.initialize = function() {
 			this.firebaseUtil.initialize(this.goToSignIn, this.goToDashboard);
 			$(document).unbind('click', '#toggle-columns').on('click', '#toggle-columns', function(event) {

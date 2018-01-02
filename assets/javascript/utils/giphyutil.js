@@ -1,3 +1,4 @@
+//Add giphy API and AJAX method.
 $(function () {
 	app.giphyUtil = (function () {
 		var giphyUtilObj = function () {

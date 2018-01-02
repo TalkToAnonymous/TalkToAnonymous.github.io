@@ -18,7 +18,8 @@ $(function () {
 			.done(this.initializeInternal)
 			.fail(this.updateMessage);
 			const self = this;
-			$(document).unbind('click', '.js-smiley-item').on('click', '.js-smiley-item', function(event) {
+			$(document).off('click', '.js-smiley-item');
+			$(document).on('click', '.js-smiley-item', function(event) {
 				event.preventDefault();
 				const target = $(event.currentTarget);
 				if(self.clearInput) {

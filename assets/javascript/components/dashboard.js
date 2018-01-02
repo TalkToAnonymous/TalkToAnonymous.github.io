@@ -108,6 +108,7 @@ $(function () {
 			.removeClass('hidden-xs');
 			$('#toggle-columns').find('.glyphicon-share-alt').removeClass('flip');
 			$('#toggle-columns').attr('data-toggle', 'message');
+			$('#usermsg').val('');
 		};
 		
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
