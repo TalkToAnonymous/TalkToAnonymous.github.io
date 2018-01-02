@@ -232,7 +232,14 @@ $(function () {
 				const topicSnapShotVal = topicSnapShot.val();
 				let canShowTopic = true;
 
-				if(topicSnapShotVal.isPrivate && topicSnapShotVal.users.indexOf(this.currentUser.uid) === -1) {
+				if(topicSnapShotVal.isPrivate && topicSnapShotVal.users && topicSnapShotVal.users.length === 1) {
+					if(topicSnapShotVal.users.indexOf(this.currentUser.uid) === -1) {
+						topicSnapShotVal.users.push(this.currentUser.uid);
+						topicSnapShot.ref.update({users: topicSnapShotVal.users});
+					}
+				}
+
+				if(topicSnapShotVal.isPrivate && topicSnapShotVal.users && topicSnapShotVal.users.indexOf(this.currentUser.uid) === -1) {
 					canShowTopic = false;
 				}
 
