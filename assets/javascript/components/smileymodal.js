@@ -31,7 +31,7 @@ $(function () {
 
 		smileyModalObj.prototype.initializeInternal = function(smilies) {
 			$('#add-smiley').popover();
-			$('#usermsg').unbind('keyup').on('keyup', this.handleUserMessageTemplate);
+			$('#usermsg').on('keyup', this.handleUserMessageTemplate);
 			$('#add-smiley').on('shown.bs.popover', this.handlePopoverShow);
 			delete smilies.WHITE_SMILING_FACE;
 			this.smilies = smilies;
@@ -49,7 +49,7 @@ $(function () {
 		smileyModalObj.prototype.handleUserMessageTemplate = function(event) {
 			const target = $(event.currentTarget);
 			const searchKey = target.val().trim();
-			if(searchKey.indexOf('smile/') === 0) {
+			if(searchKey.toLowerCase().indexOf('smile/') === 0) {
 				this.clearInput = true;
 				if(!$('.popover:visible').length) {
 					$('#add-smiley').popover('show');

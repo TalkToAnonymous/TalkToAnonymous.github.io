@@ -41,7 +41,7 @@ $(function () {
 		giphyModalObj.prototype.handleUserMessageTemplate = function(event) {
 			const target = $(event.currentTarget);
 			const searchKey = target.val().trim();
-			if(searchKey.indexOf('giphy/') === 0) {
+			if(searchKey.toLowerCase().indexOf('giphy/') === 0) {
 				this.clearUserMessagae = true;
 				if(!$('.popover:visible').length) {
 					$('#add-giphy').popover('show');
