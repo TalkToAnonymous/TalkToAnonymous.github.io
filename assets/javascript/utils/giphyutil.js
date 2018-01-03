@@ -1,4 +1,4 @@
-//Add giphy API and AJAX method.
+// Declare class for giphy API calls
 $(function () {
 	app.giphyUtil = (function () {
 		var giphyUtilObj = function () {

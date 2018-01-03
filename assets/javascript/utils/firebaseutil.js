@@ -1,3 +1,4 @@
+// Declare a class for all Firebase related API calls
 $(function () {
 	app.firebaseUtil = (function () {
 		// Firebase configuration details.
@@ -34,6 +35,7 @@ $(function () {
 			firebase.auth().onAuthStateChanged(this.handleAuthChange);
 		};
 
+		// Handles authentication change
 		firebaseUtilObj.prototype.handleAuthChange = function(user) {
 			// If user is authenticated route to dashboard
 			// else route to sign in page
@@ -46,6 +48,7 @@ $(function () {
 			}
 		}
 
+		// Removes user from onlineUsers
 		firebaseUtilObj.prototype.removeOnlineUser = function() {
 			if(this.onlineUserRef) {
 				this.removeChild('onlineUsers/' + this.onlineUserRef.key);
@@ -68,6 +71,7 @@ $(function () {
 			firebase.auth().signInWithEmailAndPassword(email, password).catch(erroCallBack);
 		};
 
+		// Sends password reset email
 		firebaseUtilObj.prototype.resetPassword = function(email, successCallback, erroCallBack) {
 			firebase.auth().sendPasswordResetEmail(email).then(successCallback).catch(erroCallBack);
 		};
@@ -91,33 +95,38 @@ $(function () {
 			this.database.ref(reference).off('child_added');
 		};
 
-		// Funtion to add a child to a list in firebase database
+		// Function to add a child to a list in firebase database
 		// @param {string} reference to the list in firebase database to which child has to be added
 		// @param {object} child child object that needs to be added
 		firebaseUtilObj.prototype.pushChild = function(reference, child) {
 			return this.database.ref(reference).push(child);
 		};
 
+		// Removes a child from list of elements in Firebase
 		firebaseUtilObj.prototype.removeChild = function(reference) {
 			return this.database.ref(reference).remove();
 		};
 
+		// Gets Firebase object for one time
 		firebaseUtilObj.prototype.getFirebaseObject = function(reference, callback) {
 			this.database.ref(reference).once('value', callback);
 		};
 
+		// Gets a random online user
 		firebaseUtilObj.prototype.getRandomOnlineUser = function(currentUser, callback) {
 			this.database.ref('onlineUsers').once('value', function(usersSnap) {
 				let allUsers = [];
 				let userKeys = [];
 				let filterdUsers = [];
 
+				// Collect all user IDs in online users
 				usersSnap.forEach(function(snapshot){
 					if(currentUser !== snapshot.val()) {
 						allUsers.push(snapshot);
 					}
 				});
 
+				// Filters duplicate user IDs
 				allUsers.forEach(function(snapshot){
 					if(userKeys.indexOf(snapshot.val() === -1)) {
 						userKeys.push(snapshot.val());
@@ -125,6 +134,7 @@ $(function () {
 					}
 				});
 
+				// Get a random index less than the number of online users
 				const randomIndex = Math.round(Math.random() * (filterdUsers.length - 1));
 				callback(filterdUsers[randomIndex]);
 			});

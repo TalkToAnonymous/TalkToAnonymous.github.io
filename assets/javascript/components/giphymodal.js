@@ -1,3 +1,4 @@
+// Declare a class to show giphy images and handle user actions
 $(function () {
 	app.giphyModal = (function () {
 		var giphyModalObj = function () {
@@ -11,6 +12,8 @@ $(function () {
 			this.clearUserMessagae = false;
 		};
 
+		// Initialize popover to add giphy button
+		// Add event listeners to the giphy API
 		giphyModalObj.prototype.initialize = function(callBack) {
 			$('#add-giphy').popover();
 			$('#usermsg').unbind('keyup').on('keyup', this.handleUserMessageTemplate);
@@ -20,6 +23,7 @@ $(function () {
 			$(document).on('click', '.js-giphy-item', function(event) {
 				event.preventDefault();
 				const target = $(event.currentTarget);
+				// Add image to the conversation
 				callBack(target.attr('data-image-url'));
 				$('#add-giphy').popover('hide');
 				if (self.clearUserMessagae) {
@@ -29,6 +33,7 @@ $(function () {
 			});
 		}
 
+		// Show giphy modal
 		giphyModalObj.prototype.handlePopoverShow = function() {
 			$('#giphy-key')
 			.val('')
@@ -38,6 +43,7 @@ $(function () {
 			}
 		}
 
+		// Handle user input giphy/ and search for giphy images
 		giphyModalObj.prototype.handleUserMessageTemplate = function(event) {
 			const target = $(event.currentTarget);
 			const searchKey = target.val().trim();
@@ -50,11 +56,13 @@ $(function () {
 			}
 		}
 
+		// Updates message on giphy modal
 		giphyModalObj.prototype.updateMessage = function(message) {
 			let listElement = $(`<li class="list-group-item giphy-item"><span class="label label-info">${message}</span></li>`);
 			$('#giphy-list').empty().append(listElement);
 		}
 
+		// Call giphy API with the search key
 		giphyModalObj.prototype.callGiphyAPI = function(event) {
 			const target = $(event.currentTarget);
 			this.clearUserMessagae = false;
@@ -62,6 +70,7 @@ $(function () {
 			this.callGiphyAPIInternal(searchKey);
 		}
 
+		// Call giphy API only if search key is more than 2 characters
 		giphyModalObj.prototype.callGiphyAPIInternal = function(searchKey) {
 			if(searchKey.length > 2) {
 				if(!this.isSearching) {
@@ -78,6 +87,7 @@ $(function () {
 			}
 		}
 
+		// Render the giphy images from the API on the modal
 		giphyModalObj.prototype.displayGifs = function(response) {
 			const giphyCarousel = $('.carousel-indicators').empty();
 			giphyCarouselInner = $('.carousel-inner').empty();
@@ -99,6 +109,7 @@ $(function () {
 					giphyCarouselInner.append(imageCont);
 				});
 
+				// Initialize carousel on giphy modal
 				$('.carousel').carousel();
 				this.isSearching = false;
 				return;
@@ -109,6 +120,7 @@ $(function () {
 			this.updateMessage('There are no GIFs for your Search !!');
 		}
 
+		// Display errors if giphy API fails
 		giphyModalObj.prototype.displayErrors = function() {
 			this.updateMessage('You broke the Giphy API with your search !!');
 		}

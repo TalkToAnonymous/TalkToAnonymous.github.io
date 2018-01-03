@@ -1,3 +1,4 @@
+// Declare a class to show smileys and handle user actions
 $(function () {
 	app.smileyModal = (function () {
 		var smileyModalObj = function () {
@@ -13,6 +14,8 @@ $(function () {
 			self.clearInput = false;
 		};
 
+		// Get list of smileys from Firebase storage
+		// Add event listeners to the smileys
 		smileyModalObj.prototype.initialize = function(callBack) {
 			$.getJSON("https://firebasestorage.googleapis.com/v0/b/talktoanonymous-d65df.appspot.com/o/smiley.json?alt=media&token=017da454-7313-4944-bb7f-696c3ef697a0")
 			.done(this.initializeInternal)
@@ -25,10 +28,12 @@ $(function () {
 				if(self.clearInput) {
 					$('#usermsg').val('');
 				}
+				// Call function to add smiley to message
 				callBack(target.attr('data-unicode'));
 			});
 		}
 
+		// Initialize popover to add smiley button
 		smileyModalObj.prototype.initializeInternal = function(smilies) {
 			$('#add-smiley').popover();
 			$('#usermsg').on('keyup', this.handleUserMessageTemplate);
@@ -37,6 +42,7 @@ $(function () {
 			this.smilies = smilies;
 		}
 
+		// Update message if smiley is not able to be located in Firebase storage
 		smileyModalObj.prototype.updateMessage = function(message) {
 			if(typeof message !== 'string') {
 				message = 'Our smilies are broken !!';
@@ -46,6 +52,8 @@ $(function () {
 			$('#smiley-list').empty().append(listElement);
 		}
 
+		// When user types smile/ open smiley modal
+		// Start searching through smileys
 		smileyModalObj.prototype.handleUserMessageTemplate = function(event) {
 			const target = $(event.currentTarget);
 			const searchKey = target.val().trim();
@@ -59,6 +67,7 @@ $(function () {
 			}
 		}
 
+		// Filter smileys based on user input
 		smileyModalObj.prototype.filterSmiley = function(searchKey) {
 			if(searchKey && searchKey.length > 2) {
 				if (!this.isSearching) {
@@ -87,12 +96,14 @@ $(function () {
 			}
 		}
 
+		// Handle smiley search
 		smileyModalObj.prototype.handleSearch = function(event) {
 			const target = $(event.currentTarget);
 			this.clearInput = false;
 			this.filterSmiley(target.val().trim());
 		}
 
+		// Show smileys popover
 		smileyModalObj.prototype.handlePopoverShow = function() {
 			$('#smiley-key')
 			.val('')
@@ -101,6 +112,7 @@ $(function () {
 			this.displaySmiley(this.smilies);
 		}
 
+		// Builds list of smileys in smiley modal
 		smileyModalObj.prototype.displaySmiley = function(smilies) {
 			const keys = Object.keys(smilies);
 			const smileyList = $('#smiley-list').empty();
