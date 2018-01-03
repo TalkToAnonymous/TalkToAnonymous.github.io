@@ -25,6 +25,10 @@ $(function () {
 			this.smileyModal = new app.smileyModal();
 			this.users = [];
 			this.colors = {};
+			this.profanityUtil = new app.profanityUtil();
+			this.handleProfanitySuccess = this.handleProfanitySuccess.bind(this);
+			this.handleProfanityFailure = this.handleProfanityFailure.bind(this);
+
 		};
 
 		// Show messages container
@@ -138,14 +142,33 @@ $(function () {
 			}
 
 			// Create message object with isImage = false
-			const messageObj = {
+			this.messageObj = {
 				value: message,
 				sender:  this.currentUser.uid,
 				moment: moment.now(),
 				isImage: false
 			};
 
-			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+			const sentiPromise = this.profanityUtil.callProfanityAPI(message, 'sentiment');
+			const abusePromise = this.profanityUtil.callProfanityAPI(message, 'abuse');
+			Promise.all([sentiPromise, abusePromise]).then(this.handleProfanitySuccess, this.handleProfanityFailure);
+		}
+
+		dashboardObj.prototype.handleProfanitySuccess = function(response){
+			if (response && response[0].sentiment === 'negative') {
+				$('#profanity-alert').modal('show');
+				$('#usermsg').val('');
+			} else if (response && response[1].sentence_type === 'Abusive') {
+				$('#profanity-alert').modal('show');
+				$('#usermsg').val('');
+			} else {
+				this.handleProfanityFailure();
+			}
+		}
+
+
+		dashboardObj.prototype.handleProfanityFailure = function(){
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', this.messageObj);
 			$('#usermsg').val('');
 		}
 
