@@ -1,3 +1,4 @@
+// Declare a class to handle all operations on dashboard
 $(function () {
 	app.dashboard = (function () {
 		var dashboardObj = function (firebaseUtil) {
@@ -26,13 +27,14 @@ $(function () {
 			this.colors = {};
 		};
 
+		// Show messages container
 		dashboardObj.prototype.showMessages = function () {
 			$('#message-container').removeClass('is-hidden');
 			$('#message-container-initial').addClass('is-hidden');
 			$('#usermsg').focus();
 		};
 
-
+		// Get random color in RGBA format
 		dashboardObj.prototype.getRandomColor = function() {
 			let r = 0, g = 0, b = 0;
 			r = Math.floor(Math.random() * 180);
@@ -42,19 +44,29 @@ $(function () {
 			return `rgba(${r}, ${g}, ${b}, 0.6)`;
 		};
 
+		// Hide messages container
 		dashboardObj.prototype.hideMessages = function() {
 			$('#message-container').addClass('is-hidden');
 			$('#message-container-initial').removeClass('is-hidden');
 		};
 
+		// Initialize dashboard components and add event listeners
 		dashboardObj.prototype.initialize = function (user) {
+			// Show dashboard page
 			this.show();
+			// Clear topics list
 			$('#topics').empty();
+			// Clear messages list
 			$('#messages-list').empty();
+			// Initialize current user with user object from Firebase
 			this.currentUser = user;
+			// Initialize current user message color
 			this.currentUser.messageColor = this.getRandomColor();
+			// Show logout button and add event listener
 			$('#sign-out').removeClass('is-hidden').unbind('click').click('click', this.firebaseUtil.signOutUser);
+			// Stop watching topics list
 			this.firebaseUtil.stopWatchingList('topics');
+			// Start watching topics list in Firebase DB
 			this.firebaseUtil.watchList('topics', this.handleTopicAdd)
 			$('#add-topic').unbind('click').on('click', this.showSaveTopic);
 			$('#start-private').unbind('click').on('click', this.showSaveTopic);
@@ -63,17 +75,20 @@ $(function () {
 			$('#message-form').unbind('submit').on('submit', this.addMessageToTheConversation);
 		};
 
+		// Initialize user message, smiley and giphy controls
 		dashboardObj.prototype.initializeMessageControls = function() {
 			this.showMessages();
 			this.giphyModal.initialize(this.addGiphyAsMessage);
 			this.smileyModal.initialize(this.addSmileyToMessage);
 		};
 
+		// Adds giphy images as message to topic
 		dashboardObj.prototype.addGiphyAsMessage = function(imageUrl) {
 			if(!imageUrl) {
 				return false;
 			}
 
+			// Create message object with isImage = true
 			const messageObj = {
 				value: imageUrl,
 				sender:  this.currentUser.uid,
@@ -84,6 +99,7 @@ $(function () {
 			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
 		};
 
+		// Adds smiley to the user message control
 		dashboardObj.prototype.addSmileyToMessage = function(smiley) {
 			const message = $('#usermsg'),
 			messageVal = $('#usermsg').val(),
@@ -91,11 +107,13 @@ $(function () {
 			message.val(messageVal.substring(0, caretPos) + smiley + messageVal.substring(caretPos));
 		};
 
+		// Handle topic click
 		dashboardObj.prototype.handleTopicClick = function(event) {
 			const target = $(event.currentTarget);
 			$('.list-group-item').removeClass('active');
 			target.addClass('active');
 			const key = target.attr('data-key');
+			// Get current topic snapshot from Firebase
 			this.firebaseUtil.getFirebaseObject('topics/' + key, this.initializeTopic);
 			$('#topics-container')
 			.addClass('hidden-sm')
@@ -111,6 +129,7 @@ $(function () {
 			$('#usermsg').val('');
 		};
 		
+		// Add message object to current topic
 		dashboardObj.prototype.addMessageToTheConversation = function(event){
 			event.preventDefault();
 			const message = $('#usermsg').val().trim();
@@ -118,6 +137,7 @@ $(function () {
 				return false;
 			}
 
+			// Create message object with isImage = false
 			const messageObj = {
 				value: message,
 				sender:  this.currentUser.uid,
@@ -129,8 +149,10 @@ $(function () {
 			$('#usermsg').val('');
 		}
 
+		// Initialize selected topic 
 		dashboardObj.prototype.initializeTopic = function(topicSnap) {
 			if(this.currentTopic) {
+				// Return if current topic is same as topic that is clicked
 				if(this.currentTopic.key === topicSnap.key) {
 					return false;
 				}
@@ -154,20 +176,24 @@ $(function () {
 				const messagesRef = 'topics/' + this.currentTopic.key + '/messages';
 				this.firebaseUtil.stopWatchingList(messagesRef);
 				this.firebaseUtil.watchList(messagesRef, this.handleMessageAdd);
+				// Scroll message list container to the bottom
 				setTimeout(function() {
 					$('.panel-body').scrollTop($('#messages-list').height());
 				}, 1000);
 			}
 		}
 
+		// Show dashboard container
 		dashboardObj.prototype.show = function () {
 			this.dashboardContainer.removeClass('is-hidden');
 		};
 
+		// Show add topic modal
 		dashboardObj.prototype.showSaveTopic = function (event) {
 			const target = $(event.currentTarget);
 			const topicForm = $('#add-topic-form');
 			const modalTitle = $('#add-topic-modal .modal-title');
+			// When data privacy = true, it is a private conversation, else public conversation
 			if(target.attr('data-privacy') === 'true') {
 				topicForm.attr('data-privacy', 'true');
 				modalTitle.text('Add Topic to start a Private Conversation');
@@ -175,7 +201,7 @@ $(function () {
 				topicForm.attr('data-privacy', 'false');
 				modalTitle.text('Add Topic to start a Public Conversation');
 			}
-
+			// Show save topic form and bind submit event for the form
 			$('#add-topic-modal').modal('show');
 			setTimeout(function() {
 				$('#topic-title').focus();
@@ -183,6 +209,7 @@ $(function () {
 			topicForm.unbind('submit').on('submit', this.saveTopic);
 		};
 
+		// Create topic in topics list
 		dashboardObj.prototype.saveTopic = function (event) {
 			event.preventDefault();
 			const title = $('#topic-title').val().trim();
@@ -191,13 +218,16 @@ $(function () {
 			}
 			const isPrivate = $(event.target).attr('data-privacy') === 'true' ? true : false;
 
+			// If topic is private, get a random user to the topic and push the topic
 			if(isPrivate) {
 				this.pushRandomUserToTopic(title, isPrivate);
+			// Push topic without users
 			} else {
 				this.pushTopic(title, isPrivate, [this.currentUser.uid]);
 			}
 		};
 
+		// Push random user to the topic
 		dashboardObj.prototype.pushRandomUserToTopic = function(title, isPrivate) {
 			this.firebaseUtil.getRandomOnlineUser(this.currentUser.uid, function(anonymousUser) {
 				let users = [this.currentUser.uid]
@@ -209,6 +239,7 @@ $(function () {
 			}.bind(this));
 		};
 
+		// Push topic to Firebase topics list
 		dashboardObj.prototype.pushTopic = function(title, isPrivate, users) {
 			const topic = {
 				title: title,
@@ -223,10 +254,12 @@ $(function () {
 			$('#add-topic-modal').modal('hide');
 		};
 
+		// Hide dashboard
 		dashboardObj.prototype.hide = function () {
 			this.dashboardContainer.addClass('is-hidden');
 		};
 
+		// Add topic to the topics list on the UI when a topic is added to the Firebase DB
 		dashboardObj.prototype.handleTopicAdd = function (topicSnapShot) {
 			if(topicSnapShot) {
 				const topicSnapShotVal = topicSnapShot.val();
@@ -244,16 +277,19 @@ $(function () {
 				}
 
 				if(canShowTopic) {
+					// Create a topic item with anchor tag, assign data key attribute
 					const topic = $('<a href="#" class="list-group-item topic-list-item">');
 					topic.attr({ 'data-key': topicSnapShot.key });
 					let icon;
 
+					// If the topic is private show private icon, else show globe icon
 					if(topicSnapShotVal.isPrivate) {
 						icon = $('<i class="fa fa-user-secret margin-right-5" aria-hidden="true"></i>');
 					} else {
 						icon = $('<i class="fa fa-globe margin-right-5" aria-hidden="true"></i>');
 					}
 
+					// Badge to show number of messages to topic
 					const badge = $('<span class="badge">');
 					const topicTitle = $(' <span>');
 
@@ -274,30 +310,36 @@ $(function () {
 			}
 		};
 
+		// Add message to the messages list on the UI when a message is added to a topic in the Firebase DB
 		dashboardObj.prototype.handleMessageAdd = function (messageSnapShot) {
 			if(messageSnapShot) {
 				const messageSnapShotVal = messageSnapShot.val();
 				const messageAddTime = messageSnapShotVal.moment;
+				// Create a container for message.
 				const messageContainer = $('<li class="clearfix">');
 				const message = $('<div>');
+
+				// Assign left or right class based on the sender for the message.
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
 					message.addClass('right-message');
 					message.addClass('right-message').css({'background-color': this.currentUser.messageColor});
 				} else {
 					if(this.users.indexOf(messageSnapShotVal.sender) === -1) {
 						this.users.push(messageSnapShotVal.sender);
+						// When sender is different from current user get random color to each user.
 						this.colors[messageSnapShotVal.sender] = this.getRandomColor();;
 					}
 
 					message.addClass('left-message').css({'background-color': this.colors[messageSnapShotVal.sender]});
 				}
 				messageContainer.attr({ 'data-key': messageSnapShot.key });
-
+				// Update number of messages when a new message is added.
 				const badge = $('a[data-key="'+ this.currentTopic.key +'"] .badge');
 				let numMessages = parseInt(badge.text());
 				numMessages++;
 				badge.text(numMessages);
 
+				// If the message is image create an image element and append to message container.
 				if(messageSnapShotVal.isImage) {
 					const imgElement = $(`<img class="gif-image" src="${messageSnapShotVal.value}" />`);
 					message.append(imgElement);
@@ -307,9 +349,11 @@ $(function () {
 					message.append(messageText);
 				}
 
+				// Convert the moment time stamp to human readable string and show in on UI.
 				const timeStamp = $('<div class="timestamp">');
 				timeStamp.text(moment(messageSnapShotVal.moment).fromNow());
 				
+				// Append or prepend icons based on sender
 				if(messageSnapShotVal.sender === this.currentUser.uid) {
 					timeStamp.append('<span class="glyphicon glyphicon-time"></span>');
 				} else {

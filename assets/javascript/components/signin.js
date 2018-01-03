@@ -1,4 +1,4 @@
-//Create sign in object, add functions to object.
+// Create sign in object, add functions to object.
 $(function () {
 	app.signIn = (function () {
 		var signInObj = function (firebaseUtil, goToSignUp) {
@@ -22,9 +22,9 @@ $(function () {
 			this.goToSignUp = goToSignUp;
 		};
 
-		//Initialize sign in page.
-		//Hide sign out button.
-		//Go to sign up page when sign up button is clicked.
+		// Initialize sign in page.
+		// Hide sign out button.
+		// Go to sign up page when sign up button is clicked.
 		signInObj.prototype.initialize = function () {
 			this.show();
 			$('#sign-out').addClass('is-hidden');
@@ -33,23 +33,23 @@ $(function () {
 			$('#go-to-sign-up').on('click', this.showSignUp);
 		};
 
-		//Show signup page when #go-to-sign-up is clicked.
+		// Show signup page when #go-to-sign-up is clicked.
 		signInObj.prototype.showSignUp = function(event) {
 			event.preventDefault();
 			this.goToSignUp();
 		}
 
-		//Show sign in container
+		// Show sign in container
 		signInObj.prototype.show = function (course) {
 			this.signInContainer.removeClass('is-hidden');
 		};
 
-		//Hide sign in container
+		// Hide sign in container
 		signInObj.prototype.hide = function () {
 			this.signInContainer.addClass('is-hidden');
 		};
 
-		//Show error message for sign up errors
+		// Show error message for sign up errors
 		signInObj.prototype.showSignUpErrors = function(error) {
 			if(error) {
 				this.errorMessage.text(error.message);
@@ -57,17 +57,18 @@ $(function () {
 			}
 		};
 
+		// Update message when reset password is successful
 		signInObj.prototype.successResetPassword = function(error) {
 			this.errorMessage.text('Password reset email has been sent !!');
 			this.errorContainer.removeClass('is-hidden').removeClass('alert-danger').addClass('alert-info');
 		};
 
-		//Hide sign up errors
+		// Hide sign up errors
 		signInObj.prototype.hideSignUpErrors = function() {
 			this.errorContainer.addClass('is-hidden');
 		};
 
-		//Send login info to firebase. If info is invalid show error message.
+		// Send login info to firebase. If info is invalid show error message.
 		signInObj.prototype.signInUser = function(event) {
 			event.preventDefault();
 			this.hideSignUpErrors();
@@ -77,6 +78,7 @@ $(function () {
 			this.firebaseUtil.signInUser(email, password, this.showSignUpErrors);
 		};
 
+		// Call Firebase reset password API
 		signInObj.prototype.forgotPassword = function(event) {
 			event.preventDefault();
 			this.hideSignUpErrors();
