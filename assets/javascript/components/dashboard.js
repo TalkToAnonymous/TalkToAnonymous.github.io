@@ -24,6 +24,10 @@ $(function () {
 			this.smileyModal = new app.smileyModal();
 			this.users = [];
 			this.colors = {};
+			this.profanityUtil = new app.profanityUtil();
+			this.handleProfanitySuccess = this.handleProfanitySuccess.bind(this);
+			this.handleProfanityFailure = this.handleProfanityFailure.bind(this);
+
 		};
 
 		dashboardObj.prototype.showMessages = function () {
@@ -117,15 +121,26 @@ $(function () {
 			if(!message) {
 				return false;
 			}
-
-			const messageObj = {
+			this.messageObj = {
 				value: message,
 				sender:  this.currentUser.uid,
 				moment: moment.now(),
 				isImage: false
 			};
 
-			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', messageObj);
+			this.profanityUtil.callProfanityAPI(message, this.handleProfanitySuccess);
+		}
+
+		dashboardObj.prototype.handleProfanitySuccess = function(response){
+			if (response) {
+				this.messageObj.value = response.result;
+			} 
+			this.handleProfanityFailure();
+		}
+
+
+		dashboardObj.prototype.handleProfanityFailure = function(){
+			this.firebaseUtil.pushChild('topics/' + this.currentTopic.key + '/messages', this.messageObj);
 			$('#usermsg').val('');
 		}
 
