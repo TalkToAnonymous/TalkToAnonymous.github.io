@@ -207,7 +207,7 @@ body {
 
 .smiley-container {
   height: 300px;
-  width: 40vmin;
+  width: 50vmin;
 }
 
 .smiley-item {
@@ -253,4 +253,22 @@ body {
 
 .margin-right-5 {
   margin-right: 5px;
+}
+
+.btn-success {
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 640px) {
+  .navbar {
+    padding: 0px;
+  }
+
+  .giphy-container {
+    width: 100%;
+  }
+
+  .smiley-container {
+    width: 100%;
+  }
 }
